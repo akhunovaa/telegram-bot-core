@@ -2,6 +2,8 @@ package com.botmasterzzz.bot.bot;
 
 import com.botmasterzzz.bot.api.impl.methods.BotApiMethod;
 import com.botmasterzzz.bot.api.impl.methods.GetMe;
+import com.botmasterzzz.bot.api.impl.methods.send.SendPhoto;
+import com.botmasterzzz.bot.api.impl.objects.Message;
 import com.botmasterzzz.bot.api.impl.objects.User;
 import com.botmasterzzz.bot.exceptions.TelegramApiException;
 import com.botmasterzzz.bot.updatehandlers.SentCallback;
@@ -39,6 +41,8 @@ public abstract class Sender {
         }
         sendApiMethodAsync(new GetMe(), sentCallback);
     }
+
+    public abstract Message execute(SendPhoto sendPhoto) throws TelegramApiException;
 
     protected abstract <T extends Serializable, Method extends BotApiMethod<T>, Callback extends SentCallback<T>> void sendApiMethodAsync(Method method, Callback callback);
 

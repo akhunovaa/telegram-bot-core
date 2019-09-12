@@ -1,6 +1,9 @@
 package com.botmasterzzz.bot.bot;
 
 import com.botmasterzzz.bot.api.impl.methods.BotApiMethod;
+import com.botmasterzzz.bot.api.impl.methods.send.SendPhoto;
+import com.botmasterzzz.bot.api.impl.objects.InputFile;
+import com.botmasterzzz.bot.api.impl.objects.Message;
 import com.botmasterzzz.bot.exceptions.TelegramApiException;
 import com.botmasterzzz.bot.exceptions.TelegramApiRequestException;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
@@ -14,6 +17,7 @@ import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
@@ -65,6 +69,44 @@ public abstract class DefaultSender extends Sender{
         return options;
     }
 
+    @Override
+    public final Message execute(SendPhoto sendPhoto) throws TelegramApiException {
+        assertParamNotNull(sendPhoto, "sendPhoto");
+
+        sendPhoto.validate();
+        try {
+            String url = getBaseUrl() + SendPhoto.PATH;
+            HttpPost httppost = configuredHttpPost(url);
+
+            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+            builder.setLaxMode();
+            builder.setCharset(StandardCharsets.UTF_8);
+            builder.addTextBody(SendPhoto.CHATID_FIELD, sendPhoto.getChatId(), TEXT_PLAIN_CONTENT_TYPE);
+            addInputFile(builder, sendPhoto.getPhoto(), SendPhoto.PHOTO_FIELD, true);
+
+            if (sendPhoto.getReplyMarkup() != null) {
+                builder.addTextBody(SendPhoto.REPLYMARKUP_FIELD, objectMapper.writeValueAsString(sendPhoto.getReplyMarkup()), TEXT_PLAIN_CONTENT_TYPE);
+            }
+            if (sendPhoto.getReplyToMessageId() != null) {
+                builder.addTextBody(SendPhoto.REPLYTOMESSAGEID_FIELD, sendPhoto.getReplyToMessageId().toString(), TEXT_PLAIN_CONTENT_TYPE);
+            }
+            if (sendPhoto.getCaption() != null) {
+                builder.addTextBody(SendPhoto.CAPTION_FIELD, sendPhoto.getCaption(), TEXT_PLAIN_CONTENT_TYPE);
+                if (sendPhoto.getParseMode() != null) {
+                    builder.addTextBody(SendPhoto.PARSEMODE_FIELD, sendPhoto.getParseMode(), TEXT_PLAIN_CONTENT_TYPE);
+                }
+            }
+            if (sendPhoto.getDisableNotification() != null) {
+                builder.addTextBody(SendPhoto.DISABLENOTIFICATION_FIELD, sendPhoto.getDisableNotification().toString(), TEXT_PLAIN_CONTENT_TYPE);
+            }
+            HttpEntity multipart = builder.build();
+            httppost.setEntity(multipart);
+
+            return sendPhoto.deserializeResponse(sendHttpPostRequest(httppost));
+        } catch (IOException e) {
+            throw new TelegramApiException("Unable to send photo", e);
+        }
+    }
 
     @Override
     protected final <T extends Serializable, Method extends BotApiMethod<T>, Callback extends SentCallback<T>> void sendApiMethodAsync(Method method, Callback callback) {
@@ -118,6 +160,20 @@ public abstract class DefaultSender extends Sender{
         HttpPost httppost = new HttpPost(url);
         httppost.setConfig(requestConfig);
         return httppost;
+    }
+
+    private void addInputFile(MultipartEntityBuilder builder, InputFile file, String fileField, boolean addField) {
+        if (file.isNew()) {
+            if (file.getNewMediaFile() != null) {
+                builder.addBinaryBody(file.getMediaName(), file.getNewMediaFile(), ContentType.APPLICATION_OCTET_STREAM, file.getMediaName());
+            } else if (file.getNewMediaStream() != null) {
+                builder.addBinaryBody(file.getMediaName(), file.getNewMediaStream(), ContentType.APPLICATION_OCTET_STREAM, file.getMediaName());
+            }
+        }
+
+        if (addField) {
+            builder.addTextBody(fileField, file.getAttachName(), TEXT_PLAIN_CONTENT_TYPE);
+        }
     }
 
     protected String getBaseUrl() {
