@@ -1,13 +1,17 @@
 package com.botmasterzzz.bot.bot;
 
 import com.botmasterzzz.bot.api.impl.methods.BotApiMethod;
+import com.botmasterzzz.bot.api.impl.methods.send.SendDocument;
 import com.botmasterzzz.bot.api.impl.methods.send.SendPhoto;
+import com.botmasterzzz.bot.api.impl.methods.send.SendVoice;
 import com.botmasterzzz.bot.api.impl.objects.InputFile;
 import com.botmasterzzz.bot.api.impl.objects.Message;
+import com.botmasterzzz.bot.api.impl.objects.media.InputMedia;
 import com.botmasterzzz.bot.exceptions.TelegramApiException;
 import com.botmasterzzz.bot.exceptions.TelegramApiRequestException;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.botmasterzzz.bot.updatehandlers.SentCallback;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
@@ -25,6 +29,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -67,6 +72,93 @@ public abstract class DefaultSender extends Sender{
 
     public final DefaultBotOptions getOptions() {
         return options;
+    }
+
+    @Override
+    public final Message execute(SendDocument sendDocument) throws TelegramApiException {
+        assertParamNotNull(sendDocument, "sendDocument");
+
+        sendDocument.validate();
+        try {
+            String url = getBaseUrl() + SendDocument.PATH;
+            HttpPost httppost = configuredHttpPost(url);
+
+            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+            builder.setLaxMode();
+            builder.setCharset(StandardCharsets.UTF_8);
+            builder.addTextBody(SendDocument.CHATID_FIELD, sendDocument.getChatId(), TEXT_PLAIN_CONTENT_TYPE);
+
+            addInputFile(builder, sendDocument.getDocument(), SendDocument.DOCUMENT_FIELD, true);
+
+            if (sendDocument.getReplyMarkup() != null) {
+                builder.addTextBody(SendDocument.REPLYMARKUP_FIELD, objectMapper.writeValueAsString(sendDocument.getReplyMarkup()), TEXT_PLAIN_CONTENT_TYPE);
+            }
+            if (sendDocument.getReplyToMessageId() != null) {
+                builder.addTextBody(SendDocument.REPLYTOMESSAGEID_FIELD, sendDocument.getReplyToMessageId().toString(), TEXT_PLAIN_CONTENT_TYPE);
+            }
+            if (sendDocument.getCaption() != null) {
+                builder.addTextBody(SendDocument.CAPTION_FIELD, sendDocument.getCaption(), TEXT_PLAIN_CONTENT_TYPE);
+                if (sendDocument.getParseMode() != null) {
+                    builder.addTextBody(SendDocument.PARSEMODE_FIELD, sendDocument.getParseMode(), TEXT_PLAIN_CONTENT_TYPE);
+                }
+            }
+            if (sendDocument.getDisableNotification() != null) {
+                builder.addTextBody(SendDocument.DISABLENOTIFICATION_FIELD, sendDocument.getDisableNotification().toString(), TEXT_PLAIN_CONTENT_TYPE);
+            }
+
+            if (sendDocument.getThumb() != null) {
+                addInputFile(builder, sendDocument.getThumb(), SendDocument.THUMB_FIELD, false);
+                builder.addTextBody(SendDocument.THUMB_FIELD, sendDocument.getThumb().getAttachName(), TEXT_PLAIN_CONTENT_TYPE);
+            }
+
+            HttpEntity multipart = builder.build();
+            httppost.setEntity(multipart);
+
+            return sendDocument.deserializeResponse(sendHttpPostRequest(httppost));
+        } catch (IOException e) {
+            throw new TelegramApiException("Unable to send document", e);
+        }
+    }
+
+
+    @Override
+    public final Message execute(SendVoice sendVoice) throws TelegramApiException {
+        assertParamNotNull(sendVoice, "sendVoice");
+        sendVoice.validate();
+        try {
+            String url = getBaseUrl() + SendVoice.PATH;
+            HttpPost httppost = configuredHttpPost(url);
+            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+            builder.setLaxMode();
+            builder.setCharset(StandardCharsets.UTF_8);
+            builder.addTextBody(SendVoice.CHATID_FIELD, sendVoice.getChatId(), TEXT_PLAIN_CONTENT_TYPE);
+            addInputFile(builder, sendVoice.getVoice(), SendVoice.VOICE_FIELD, true);
+
+            if (sendVoice.getReplyMarkup() != null) {
+                builder.addTextBody(SendVoice.REPLYMARKUP_FIELD, objectMapper.writeValueAsString(sendVoice.getReplyMarkup()), TEXT_PLAIN_CONTENT_TYPE);
+            }
+            if (sendVoice.getReplyToMessageId() != null) {
+                builder.addTextBody(SendVoice.REPLYTOMESSAGEID_FIELD, sendVoice.getReplyToMessageId().toString(), TEXT_PLAIN_CONTENT_TYPE);
+            }
+            if (sendVoice.getDisableNotification() != null) {
+                builder.addTextBody(SendVoice.DISABLENOTIFICATION_FIELD, sendVoice.getDisableNotification().toString(), TEXT_PLAIN_CONTENT_TYPE);
+            }
+            if (sendVoice.getDuration() != null) {
+                builder.addTextBody(SendVoice.DURATION_FIELD, sendVoice.getDuration().toString(), TEXT_PLAIN_CONTENT_TYPE);
+            }
+            if (sendVoice.getCaption() != null) {
+                builder.addTextBody(SendVoice.CAPTION_FIELD, sendVoice.getCaption(), TEXT_PLAIN_CONTENT_TYPE);
+                if (sendVoice.getParseMode() != null) {
+                    builder.addTextBody(SendVoice.PARSEMODE_FIELD, sendVoice.getParseMode(), TEXT_PLAIN_CONTENT_TYPE);
+                }
+            }
+            HttpEntity multipart = builder.build();
+            httppost.setEntity(multipart);
+
+            return sendVoice.deserializeResponse(sendHttpPostRequest(httppost));
+        } catch (IOException e) {
+            throw new TelegramApiException("Unable to send voice", e);
+        }
     }
 
     @Override
@@ -160,6 +252,28 @@ public abstract class DefaultSender extends Sender{
         HttpPost httppost = new HttpPost(url);
         httppost.setConfig(requestConfig);
         return httppost;
+    }
+
+    private void addInputData(MultipartEntityBuilder builder, InputMedia media, String mediaField, boolean addField) throws JsonProcessingException {
+        if (media.isNewMedia()) {
+            if (media.getMediaFile() != null) {
+                builder.addBinaryBody(media.getMediaName(), media.getMediaFile(), ContentType.APPLICATION_OCTET_STREAM, media.getMediaName());
+            } else if (media.getNewMediaStream() != null) {
+                builder.addBinaryBody(media.getMediaName(), media.getNewMediaStream(), ContentType.APPLICATION_OCTET_STREAM, media.getMediaName());
+            }
+        }
+
+        if (addField) {
+            builder.addTextBody(mediaField, objectMapper.writeValueAsString(media), TEXT_PLAIN_CONTENT_TYPE);
+        }
+    }
+
+    private void addInputData(MultipartEntityBuilder builder, List<InputMedia> media, String mediaField) throws JsonProcessingException {
+        for (InputMedia inputMedia : media) {
+            addInputData(builder, inputMedia, null, false);
+        }
+
+        builder.addTextBody(mediaField, objectMapper.writeValueAsString(media), TEXT_PLAIN_CONTENT_TYPE);
     }
 
     private void addInputFile(MultipartEntityBuilder builder, InputFile file, String fileField, boolean addField) {

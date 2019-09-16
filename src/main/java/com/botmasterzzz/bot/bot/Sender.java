@@ -2,7 +2,9 @@ package com.botmasterzzz.bot.bot;
 
 import com.botmasterzzz.bot.api.impl.methods.BotApiMethod;
 import com.botmasterzzz.bot.api.impl.methods.GetMe;
+import com.botmasterzzz.bot.api.impl.methods.send.SendDocument;
 import com.botmasterzzz.bot.api.impl.methods.send.SendPhoto;
+import com.botmasterzzz.bot.api.impl.methods.send.SendVoice;
 import com.botmasterzzz.bot.api.impl.objects.Message;
 import com.botmasterzzz.bot.api.impl.objects.User;
 import com.botmasterzzz.bot.exceptions.TelegramApiException;
@@ -43,6 +45,10 @@ public abstract class Sender {
     }
 
     public abstract Message execute(SendPhoto sendPhoto) throws TelegramApiException;
+
+    public abstract Message execute(SendDocument sendDocument) throws TelegramApiException;
+
+    public abstract Message execute(SendVoice sendVoice) throws TelegramApiException;
 
     protected abstract <T extends Serializable, Method extends BotApiMethod<T>, Callback extends SentCallback<T>> void sendApiMethodAsync(Method method, Callback callback);
 
