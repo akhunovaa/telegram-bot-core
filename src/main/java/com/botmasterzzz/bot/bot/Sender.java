@@ -44,11 +44,11 @@ public abstract class Sender {
         sendApiMethodAsync(new GetMe(), sentCallback);
     }
 
-    public abstract Message execute(SendPhoto sendPhoto) throws TelegramApiException;
+    public abstract Message executePhoto(SendPhoto sendPhoto) throws TelegramApiException;
 
-    public abstract Message execute(SendDocument sendDocument) throws TelegramApiException;
+    public abstract Message executeDocument(SendDocument sendDocument) throws TelegramApiException;
 
-    public abstract Message execute(SendVoice sendVoice) throws TelegramApiException;
+    public abstract Message executeVoice(SendVoice sendVoice) throws TelegramApiException;
 
     protected abstract <T extends Serializable, Method extends BotApiMethod<T>, Callback extends SentCallback<T>> void sendApiMethodAsync(Method method, Callback callback);
 

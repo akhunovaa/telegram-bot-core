@@ -75,7 +75,7 @@ public abstract class DefaultSender extends Sender{
     }
 
     @Override
-    public final Message execute(SendDocument sendDocument) throws TelegramApiException {
+    public final Message executeDocument(SendDocument sendDocument) throws TelegramApiException {
         assertParamNotNull(sendDocument, "sendDocument");
 
         sendDocument.validate();
@@ -122,7 +122,7 @@ public abstract class DefaultSender extends Sender{
 
 
     @Override
-    public final Message execute(SendVoice sendVoice) throws TelegramApiException {
+    public final Message executeVoice(SendVoice sendVoice) throws TelegramApiException {
         assertParamNotNull(sendVoice, "sendVoice");
         sendVoice.validate();
         try {
@@ -162,7 +162,7 @@ public abstract class DefaultSender extends Sender{
     }
 
     @Override
-    public final Message execute(SendPhoto sendPhoto) throws TelegramApiException {
+    public final Message executePhoto(SendPhoto sendPhoto) throws TelegramApiException {
         assertParamNotNull(sendPhoto, "sendPhoto");
 
         sendPhoto.validate();
