@@ -4,6 +4,7 @@ import com.botmasterzzz.bot.api.impl.methods.BotApiMethod;
 import com.botmasterzzz.bot.api.impl.methods.GetMe;
 import com.botmasterzzz.bot.api.impl.methods.send.SendDocument;
 import com.botmasterzzz.bot.api.impl.methods.send.SendPhoto;
+import com.botmasterzzz.bot.api.impl.methods.send.SendVideo;
 import com.botmasterzzz.bot.api.impl.methods.send.SendVoice;
 import com.botmasterzzz.bot.api.impl.objects.Message;
 import com.botmasterzzz.bot.api.impl.objects.User;
@@ -45,6 +46,8 @@ public abstract class Sender {
     }
 
     public abstract Message executePhoto(SendPhoto sendPhoto) throws TelegramApiException;
+
+    public abstract Message executeVideo(SendVideo sendVideo) throws TelegramApiException;
 
     public abstract Message executeDocument(SendDocument sendDocument) throws TelegramApiException;
 

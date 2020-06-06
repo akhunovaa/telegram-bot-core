@@ -3,6 +3,7 @@ package com.botmasterzzz.bot.bot;
 import com.botmasterzzz.bot.api.impl.methods.BotApiMethod;
 import com.botmasterzzz.bot.api.impl.methods.send.SendDocument;
 import com.botmasterzzz.bot.api.impl.methods.send.SendPhoto;
+import com.botmasterzzz.bot.api.impl.methods.send.SendVideo;
 import com.botmasterzzz.bot.api.impl.methods.send.SendVoice;
 import com.botmasterzzz.bot.api.impl.objects.InputFile;
 import com.botmasterzzz.bot.api.impl.objects.Message;
@@ -197,6 +198,62 @@ public abstract class DefaultSender extends Sender{
             return sendPhoto.deserializeResponse(sendHttpPostRequest(httppost));
         } catch (IOException e) {
             throw new TelegramApiException("Unable to send photo", e);
+        }
+    }
+
+    @Override
+    public final Message executeVideo(SendVideo sendVideo) throws TelegramApiException {
+        assertParamNotNull(sendVideo, "sendVideo");
+
+        sendVideo.validate();
+        try {
+            String url = getBaseUrl() + SendVideo.PATH;
+            HttpPost httppost = configuredHttpPost(url);
+
+            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+            builder.setLaxMode();
+            builder.setCharset(StandardCharsets.UTF_8);
+            builder.addTextBody(SendVideo.CHATID_FIELD, sendVideo.getChatId(), TEXT_PLAIN_CONTENT_TYPE);
+            addInputFile(builder, sendVideo.getVideo(), SendVideo.VIDEO_FIELD, true);
+
+            if (sendVideo.getReplyMarkup() != null) {
+                builder.addTextBody(SendVideo.REPLYMARKUP_FIELD, objectMapper.writeValueAsString(sendVideo.getReplyMarkup()), TEXT_PLAIN_CONTENT_TYPE);
+            }
+            if (sendVideo.getReplyToMessageId() != null) {
+                builder.addTextBody(SendVideo.REPLYTOMESSAGEID_FIELD, sendVideo.getReplyToMessageId().toString(), TEXT_PLAIN_CONTENT_TYPE);
+            }
+            if (sendVideo.getCaption() != null) {
+                builder.addTextBody(SendVideo.CAPTION_FIELD, sendVideo.getCaption(), TEXT_PLAIN_CONTENT_TYPE);
+                if (sendVideo.getParseMode() != null) {
+                    builder.addTextBody(SendVideo.PARSEMODE_FIELD, sendVideo.getParseMode(), TEXT_PLAIN_CONTENT_TYPE);
+                }
+            }
+            if (sendVideo.getSupportsStreaming() != null) {
+                builder.addTextBody(SendVideo.SUPPORTSSTREAMING_FIELD, sendVideo.getSupportsStreaming().toString(), TEXT_PLAIN_CONTENT_TYPE);
+            }
+            if (sendVideo.getDuration() != null) {
+                builder.addTextBody(SendVideo.DURATION_FIELD, sendVideo.getDuration().toString(), TEXT_PLAIN_CONTENT_TYPE);
+            }
+            if (sendVideo.getWidth() != null) {
+                builder.addTextBody(SendVideo.WIDTH_FIELD, sendVideo.getWidth().toString(), TEXT_PLAIN_CONTENT_TYPE);
+            }
+            if (sendVideo.getHeight() != null) {
+                builder.addTextBody(SendVideo.HEIGHT_FIELD, sendVideo.getHeight().toString(), TEXT_PLAIN_CONTENT_TYPE);
+            }
+            if (sendVideo.getDisableNotification() != null) {
+                builder.addTextBody(SendVideo.DISABLENOTIFICATION_FIELD, sendVideo.getDisableNotification().toString(), TEXT_PLAIN_CONTENT_TYPE);
+            }
+            if (sendVideo.getThumb() != null) {
+                addInputFile(builder, sendVideo.getThumb(), SendVideo.THUMB_FIELD, false);
+                builder.addTextBody(SendVideo.THUMB_FIELD, sendVideo.getThumb().getAttachName(), TEXT_PLAIN_CONTENT_TYPE);
+            }
+
+            HttpEntity multipart = builder.build();
+            httppost.setEntity(multipart);
+
+            return sendVideo.deserializeResponse(sendHttpPostRequest(httppost));
+        } catch (IOException e) {
+            throw new TelegramApiException("Unable to send video", e);
         }
     }
 
