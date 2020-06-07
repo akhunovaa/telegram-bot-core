@@ -21,6 +21,7 @@ public class Message implements BotApiObject {
     private static final String CAPTIONENTITIES_FIELD = "caption_entities";
     private static final String DOCUMENT_FIELD = "document";
     private static final String PHOTO_FIELD = "photo";
+    private static final String VIDEO_FIELD = "video";
     private static final String CONTACT_FIELD = "contact";
     private static final String LOCATION_FIELD = "location";
     private static final String PINNED_MESSAGE_FIELD = "pinned_message";
@@ -66,6 +67,8 @@ public class Message implements BotApiObject {
     private Document document;
     @JsonProperty(PHOTO_FIELD)
     private List<PhotoSize> photo;
+    @JsonProperty(VIDEO_FIELD)
+    private Video video;
     @JsonProperty(CONTACT_FIELD)
     private Contact contact;
     @JsonProperty(LOCATION_FIELD)
@@ -306,5 +309,14 @@ public class Message implements BotApiObject {
     public String getConnectedWebsite() {
         return connectedWebsite;
     }
+
+    public Video getVideo() {
+        return video;
+    }
+
+    public boolean hasVideo() {
+        return this.video != null;
+    }
+
 
 }
