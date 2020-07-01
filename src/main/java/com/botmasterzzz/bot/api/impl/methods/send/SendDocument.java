@@ -65,19 +65,19 @@ public class SendDocument extends PartialBotApiMethod<Message> {
         return this;
     }
 
-    public SendDocument setDocument(File file) {
+    public SendDocument setDocumentFile(File file) {
         Objects.requireNonNull(file, "documentName cannot be null!");
         this.document = new InputFile(file, file.getName());
         return this;
     }
 
-    public SendDocument setDocument(InputFile document) {
+    public SendDocument setDocumentInput(InputFile document) {
         Objects.requireNonNull(document, "document cannot be null!");
         this.document = document;
         return this;
     }
 
-    public SendDocument setDocument(String documentName, InputStream inputStream) {
+    public SendDocument setDocumentOverLoaded(String documentName, InputStream inputStream) {
         Objects.requireNonNull(documentName, "documentName cannot be null!");
         Objects.requireNonNull(inputStream, "inputStream cannot be null!");
         this.document = new InputFile(inputStream, documentName);

@@ -102,19 +102,19 @@ public class SendPhoto extends PartialBotApiMethod<Message> {
         return this;
     }
 
-    public SendPhoto setPhoto(File file) {
+    public SendPhoto setPhotoFile(File file) {
         Objects.requireNonNull(file, "file cannot be null!");
         this.photo = new InputFile(file, file.getName());
         return this;
     }
 
-    public SendPhoto setPhoto(InputFile photo) {
+    public SendPhoto setPhotoInputFile(InputFile photo) {
         Objects.requireNonNull(photo, "photo cannot be null!");
         this.photo = photo;
         return this;
     }
 
-    public SendPhoto setPhoto(String photoName, InputStream inputStream) {
+    public SendPhoto setPhotoOverLoaded(String photoName, InputStream inputStream) {
         Objects.requireNonNull(photoName, "photoName cannot be null!");
         Objects.requireNonNull(inputStream, "inputStream cannot be null!");
         this.photo = new InputFile(inputStream, photoName);
