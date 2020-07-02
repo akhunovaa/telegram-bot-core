@@ -140,19 +140,19 @@ public class SendVideo extends PartialBotApiMethod<Message> {
         return this;
     }
 
-    public SendVideo setVideo(InputFile video) {
+    public SendVideo setVideoInputFile(InputFile video) {
         Objects.requireNonNull(video, "video cannot be null!");
         this.video = video;
         return this;
     }
 
-    public SendVideo setVideo(File file) {
+    public SendVideo setVideoFile(File file) {
         Objects.requireNonNull(file, "file cannot be null!");
         this.video = new InputFile(file, file.getName());
         return this;
     }
 
-    public SendVideo setVideo(String videoName, InputStream inputStream) {
+    public SendVideo setVideoOverloaded(String videoName, InputStream inputStream) {
         Objects.requireNonNull(videoName, "videoName cannot be null!");
         Objects.requireNonNull(inputStream, "inputStream cannot be null!");
         this.video = new InputFile(inputStream, videoName);
