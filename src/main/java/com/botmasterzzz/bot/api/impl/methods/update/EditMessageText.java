@@ -24,25 +24,12 @@ public class EditMessageText  extends BotApiMethod<Serializable> {
     private static final String DISABLE_WEB_PREVIEW_FIELD = "disable_web_page_preview";
     private static final String REPLYMARKUP_FIELD = "reply_markup";
 
-    /**
-     * Required if inline_message_id is not specified. Unique identifier for the chat to send the
-     * message to (Or username for channels)
-     */
     @JsonProperty(CHATID_FIELD)
     private String chatId;
-    /**
-     * Required if inline_message_id is not specified. Unique identifier of the sent message
-     */
     @JsonProperty(MESSAGEID_FIELD)
     private Integer messageId;
-    /**
-     * Required if chat_id and message_id are not specified. Identifier of the inline message
-     */
     @JsonProperty(INLINE_MESSAGE_ID_FIELD)
     private String inlineMessageId;
-    /**
-     * New text of the message
-     */
     @JsonProperty(TEXT_FIELD)
     private String text;
 
