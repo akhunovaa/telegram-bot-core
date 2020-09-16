@@ -7,7 +7,6 @@ import com.botmasterzzz.bot.api.impl.objects.payments.Invoice;
 import com.botmasterzzz.bot.api.impl.objects.payments.SuccessfulPayment;
 import com.botmasterzzz.bot.api.impl.objects.stickers.Sticker;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import javafx.animation.Animation;
 
 import java.util.List;
 
@@ -94,8 +93,6 @@ public class Message implements BotApiObject {
     private Location location;
     @JsonProperty(VENUE_FIELD)
     private Venue venue;
-    @JsonProperty(ANIMATION_FIELD)
-    private Animation animation;
     @JsonProperty(PINNED_MESSAGE_FIELD)
     private Message pinnedMessage;
     @JsonProperty(NEWCHATMEMBERS_FIELD)
@@ -215,10 +212,6 @@ public class Message implements BotApiObject {
 
     public Video getVideo() {
         return video;
-    }
-
-    public Animation getAnimation() {
-        return animation;
     }
 
     public Contact getContact() {
@@ -421,9 +414,6 @@ public class Message implements BotApiObject {
         return passportData != null;
     }
 
-    public boolean hasAnimation() {
-        return animation != null;
-    }
 
     @Override
     public String toString() {
