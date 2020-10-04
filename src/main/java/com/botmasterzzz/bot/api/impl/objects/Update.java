@@ -10,7 +10,6 @@ import com.botmasterzzz.bot.api.impl.objects.polls.PollAnswer;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Update implements BotApiObject {
-
     private static final String UPDATEID_FIELD = "update_id";
     private static final String MESSAGE_FIELD = "message";
     private static final String INLINEQUERY_FIELD = "inline_query";
@@ -24,30 +23,34 @@ public class Update implements BotApiObject {
     private static final String POLL_FIELD = "poll";
     private static final String POLLANSWER_FIELD = "poll_answer";
 
-
     @JsonProperty(UPDATEID_FIELD)
     private Integer updateId;
     @JsonProperty(MESSAGE_FIELD)
-    private Message message;
+    private Message message; ///< Optional. New incoming message of any kind — text, photo, sticker, etc.
     @JsonProperty(INLINEQUERY_FIELD)
-    private InlineQuery inlineQuery;
+    private InlineQuery inlineQuery; ///< Optional. New incoming inline query
     @JsonProperty(CHOSENINLINEQUERY_FIELD)
-    private ChosenInlineQuery chosenInlineQuery;
+    private ChosenInlineQuery chosenInlineQuery; ///< Optional. The result of a inline query that was chosen by a user and sent to their chat partner
     @JsonProperty(CALLBACKQUERY_FIELD)
-    private CallbackQuery callbackQuery;
+    private CallbackQuery callbackQuery; ///< Optional. New incoming callback query
     @JsonProperty(EDITEDMESSAGE_FIELD)
-    private Message editedMessage;
+    private Message editedMessage; ///< Optional. New version of a message that is known to the bot and was edited
     @JsonProperty(CHANNELPOST_FIELD)
-    private Message channelPost;
+    private Message channelPost; ///< Optional. New incoming channel post of any kind — text, photo, sticker, etc.
     @JsonProperty(EDITEDCHANNELPOST_FIELD)
-    private Message editedChannelPost;
+    private Message editedChannelPost; ///< Optional. New version of a channel post that is known to the bot and was edited
     @JsonProperty(SHIPPING_QUERY_FIELD)
-    private ShippingQuery shippingQuery;
+    private ShippingQuery shippingQuery; ///< Optional. New incoming shipping query. Only for invoices with flexible price
     @JsonProperty(PRE_CHECKOUT_QUERY_FIELD)
-    private PreCheckoutQuery preCheckoutQuery;
+    private PreCheckoutQuery preCheckoutQuery; ///< Optional. New incoming pre-checkout query. Contains full information about checkout
     @JsonProperty(POLL_FIELD)
-    private Poll poll;
-
+    private Poll poll; ///< Optional. New poll state. Bots receive only updates about polls, which are sent by the bot.
+    /**
+     * Optional.
+     * A user changed their answer in a non-anonymous poll.
+     *
+     * @apiNote Bots receive new votes only in polls that were sent by the bot itself.
+     */
     @JsonProperty(POLLANSWER_FIELD)
     private PollAnswer pollAnswer;
 
