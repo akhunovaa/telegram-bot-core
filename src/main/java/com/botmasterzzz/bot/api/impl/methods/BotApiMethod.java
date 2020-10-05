@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public abstract class BotApiMethod<T extends Serializable> extends PartialBotApiMethod<T>  {
+public abstract class BotApiMethod<T extends Serializable> extends PartialBotApiMethod<T> {
 
     protected static final String METHOD_FIELD = "method";
 

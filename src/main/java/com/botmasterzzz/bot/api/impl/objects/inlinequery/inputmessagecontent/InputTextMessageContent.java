@@ -3,7 +3,9 @@ package com.botmasterzzz.bot.api.impl.objects.inlinequery.inputmessagecontent;
 import com.botmasterzzz.bot.api.impl.methods.ParseMode;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+@JsonDeserialize
 public class InputTextMessageContent implements InputMessageContent {
 
     private static final String MESSAGETEXT_FIELD = "message_text";

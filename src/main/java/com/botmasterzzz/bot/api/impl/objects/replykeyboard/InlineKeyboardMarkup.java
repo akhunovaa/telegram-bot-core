@@ -3,12 +3,16 @@ package com.botmasterzzz.bot.api.impl.objects.replykeyboard;
 import com.botmasterzzz.bot.api.impl.objects.replykeyboard.buttons.InlineKeyboardButton;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class InlineKeyboardMarkup implements ReplyKeyboard  {  private static final String KEYBOARD_FIELD = "inline_keyboard";
+@JsonDeserialize
+public class InlineKeyboardMarkup implements ReplyKeyboard {
+
+    private static final String KEYBOARD_FIELD = "inline_keyboard";
 
     @JsonProperty(KEYBOARD_FIELD)
     private List<List<InlineKeyboardButton>> keyboard;
@@ -16,6 +20,11 @@ public class InlineKeyboardMarkup implements ReplyKeyboard  {  private static fi
     public InlineKeyboardMarkup() {
         super();
         keyboard = new ArrayList<>();
+    }
+
+    public InlineKeyboardMarkup(List<List<InlineKeyboardButton>> keyboard) {
+        super();
+        this.keyboard = keyboard;
     }
 
     public List<List<InlineKeyboardButton>> getKeyboard() {

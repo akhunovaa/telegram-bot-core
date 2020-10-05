@@ -1,9 +1,9 @@
 package com.botmasterzzz.bot.api.impl.methods.send;
 
 import com.botmasterzzz.bot.api.impl.methods.PartialBotApiMethod;
+import com.botmasterzzz.bot.api.impl.objects.ApiResponse;
 import com.botmasterzzz.bot.api.impl.objects.InputFile;
 import com.botmasterzzz.bot.api.impl.objects.Message;
-import com.botmasterzzz.bot.api.impl.objects.replykeyboard.ApiResponse;
 import com.botmasterzzz.bot.api.impl.objects.replykeyboard.ReplyKeyboard;
 import com.botmasterzzz.bot.exceptions.TelegramApiRequestException;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
@@ -83,6 +83,12 @@ public class SendVideoNote extends PartialBotApiMethod<Message> {
         return this;
     }
 
+    public SendVideoNote setChatId(Long chatId) {
+        Objects.requireNonNull(chatId);
+        this.chatId = chatId.toString();
+        return this;
+    }
+
     public InputFile getVideoNote() {
         return videoNote;
     }
@@ -92,18 +98,24 @@ public class SendVideoNote extends PartialBotApiMethod<Message> {
         return this;
     }
 
+    public SendVideoNote setVideoNote(InputFile videoNote) {
+        Objects.requireNonNull(videoNote, "videoNote cannot be null!");
+        this.videoNote = videoNote;
+        return this;
+    }
+
+    public SendVideoNote setVideoNote(File file) {
+        Objects.requireNonNull(file, "file cannot be null!");
+        this.videoNote = new InputFile(file, file.getName());
+        return this;
+    }
+
     public Integer getLength() {
         return length;
     }
 
     public SendVideoNote setLength(Integer length) {
         this.length = length;
-        return this;
-    }
-
-    public SendVideoNote setChatId(Long chatId) {
-        Objects.requireNonNull(chatId);
-        this.chatId = chatId.toString();
         return this;
     }
 
@@ -148,18 +160,6 @@ public class SendVideoNote extends PartialBotApiMethod<Message> {
         return this;
     }
 
-    public SendVideoNote setVideoNote(InputFile videoNote) {
-        Objects.requireNonNull(videoNote, "videoNote cannot be null!");
-        this.videoNote = videoNote;
-        return this;
-    }
-
-    public SendVideoNote setVideoNote(File file) {
-        Objects.requireNonNull(file, "file cannot be null!");
-        this.videoNote = new InputFile(file, file.getName());
-        return this;
-    }
-
     public SendVideoNote setVideoNote(String videoName, InputStream inputStream) {
         Objects.requireNonNull(videoName, "videoName cannot be null!");
         Objects.requireNonNull(inputStream, "inputStream cannot be null!");
@@ -180,7 +180,8 @@ public class SendVideoNote extends PartialBotApiMethod<Message> {
     public Message deserializeResponse(String answer) throws TelegramApiRequestException {
         try {
             ApiResponse<Message> result = OBJECT_MAPPER.readValue(answer,
-                    new TypeReference<ApiResponse<Message>>(){});
+                    new TypeReference<ApiResponse<Message>>() {
+                    });
             if (result.getOk()) {
                 return result.getResult();
             } else {

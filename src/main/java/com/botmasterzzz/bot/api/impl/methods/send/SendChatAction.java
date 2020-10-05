@@ -2,7 +2,7 @@ package com.botmasterzzz.bot.api.impl.methods.send;
 
 import com.botmasterzzz.bot.api.impl.methods.ActionType;
 import com.botmasterzzz.bot.api.impl.methods.BotApiMethod;
-import com.botmasterzzz.bot.api.impl.objects.replykeyboard.ApiResponse;
+import com.botmasterzzz.bot.api.impl.objects.ApiResponse;
 import com.botmasterzzz.bot.exceptions.TelegramApiRequestException;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -43,11 +43,6 @@ public class SendChatAction extends BotApiMethod<Boolean> {
         return chatId;
     }
 
-    @JsonIgnore
-    public ActionType getAction() {
-        return ActionType.get(action);
-    }
-
     public SendChatAction setChatId(String chatId) {
         this.chatId = chatId;
         return this;
@@ -57,6 +52,11 @@ public class SendChatAction extends BotApiMethod<Boolean> {
         Objects.requireNonNull(chatId);
         this.chatId = chatId.toString();
         return this;
+    }
+
+    @JsonIgnore
+    public ActionType getAction() {
+        return ActionType.get(action);
     }
 
     @JsonIgnore
@@ -74,7 +74,8 @@ public class SendChatAction extends BotApiMethod<Boolean> {
     public Boolean deserializeResponse(String answer) throws TelegramApiRequestException {
         try {
             ApiResponse<Boolean> result = OBJECT_MAPPER.readValue(answer,
-                    new TypeReference<ApiResponse<Boolean>>(){});
+                    new TypeReference<ApiResponse<Boolean>>() {
+                    });
             if (result.getOk()) {
                 return result.getResult();
             } else {

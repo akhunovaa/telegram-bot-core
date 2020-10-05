@@ -1,7 +1,7 @@
 package com.botmasterzzz.bot.api.impl.methods.update;
 
 import com.botmasterzzz.bot.api.impl.methods.BotApiMethod;
-import com.botmasterzzz.bot.api.impl.objects.replykeyboard.ApiResponse;
+import com.botmasterzzz.bot.api.impl.objects.ApiResponse;
 import com.botmasterzzz.bot.exceptions.TelegramApiRequestException;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -1,7 +1,7 @@
 package com.botmasterzzz.bot.api.impl.methods;
 
+import com.botmasterzzz.bot.api.impl.objects.ApiResponse;
 import com.botmasterzzz.bot.api.impl.objects.Update;
-import com.botmasterzzz.bot.api.impl.objects.replykeyboard.ApiResponse;
 import com.botmasterzzz.bot.exceptions.TelegramApiRequestException;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -81,7 +81,8 @@ public class GetUpdates extends BotApiMethod<ArrayList<Update>> {
             TelegramApiRequestException {
         try {
             ApiResponse<ArrayList<Update>> result = OBJECT_MAPPER.readValue(answer,
-                    new TypeReference<ApiResponse<ArrayList<Update>>>(){});
+                    new TypeReference<ApiResponse<ArrayList<Update>>>() {
+                    });
             if (result.getOk()) {
                 return result.getResult();
             } else {

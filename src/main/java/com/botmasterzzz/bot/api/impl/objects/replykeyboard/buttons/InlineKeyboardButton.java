@@ -7,27 +7,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+
 public class InlineKeyboardButton implements InputBotApiObject, Validable {
 
     private static final String TEXT_FIELD = "text";
     private static final String URL_FIELD = "url";
     private static final String CALLBACK_DATA_FIELD = "callback_data";
+    private static final String CALLBACK_GAME_FIELD = "callback_game";
     private static final String SWITCH_INLINE_QUERY_FIELD = "switch_inline_query";
     private static final String SWITCH_INLINE_QUERY_CURRENT_CHAT_FIELD = "switch_inline_query_current_chat";
     private static final String PAY_FIELD = "pay";
+    private static final String LOGIN_URL_FIELD = "login_url";
 
     @JsonProperty(TEXT_FIELD)
-    private String text;
+    private String text; ///< Label text on the button
     @JsonProperty(URL_FIELD)
-    private String url;
+    private String url; ///< Optional. HTTP or tg:// url to be opened when button is pressed
     @JsonProperty(CALLBACK_DATA_FIELD)
-    private String callbackData;
+    private String callbackData; ///< Optional. Data to be sent in a callback query to the bot when button is pressed
 
     @JsonProperty(SWITCH_INLINE_QUERY_FIELD)
     private String switchInlineQuery;
 
     @JsonProperty(SWITCH_INLINE_QUERY_CURRENT_CHAT_FIELD)
     private String switchInlineQueryCurrentChat;
+
 
     @JsonProperty(PAY_FIELD)
     private Boolean pay;
@@ -37,7 +43,7 @@ public class InlineKeyboardButton implements InputBotApiObject, Validable {
     }
 
     public InlineKeyboardButton(String text) {
-        this.text = text;
+        this.text = checkNotNull(text);
     }
 
     public String getText() {

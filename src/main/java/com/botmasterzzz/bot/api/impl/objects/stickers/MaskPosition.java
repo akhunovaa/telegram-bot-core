@@ -28,28 +28,28 @@ public class MaskPosition implements InputBotApiObject, Validable {
         return point;
     }
 
-    public Float getxShift() {
-        return xShift;
-    }
-
-    public Float getyShift() {
-        return yShift;
-    }
-
-    public Float getScale() {
-        return scale;
-    }
-
     public void setPoint(String point) {
         this.point = point;
+    }
+
+    public Float getxShift() {
+        return xShift;
     }
 
     public void setxShift(Float xShift) {
         this.xShift = xShift;
     }
 
+    public Float getyShift() {
+        return yShift;
+    }
+
     public void setyShift(Float yShift) {
         this.yShift = yShift;
+    }
+
+    public Float getScale() {
+        return scale;
     }
 
     public void setScale(Float scale) {

@@ -97,6 +97,4 @@ public class KeyboardButton implements InputBotApiObject, Validable {
                 ", requestLocation=" + requestLocation +
                 '}';
     }
-
-
 }

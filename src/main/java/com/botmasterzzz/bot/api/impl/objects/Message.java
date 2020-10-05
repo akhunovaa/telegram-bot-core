@@ -202,6 +202,7 @@ public class Message implements BotApiObject {
 
     @JsonProperty(VIABOT_FIELD)
     private User viaBot; // Optional. Bot through which the message was sent
+
     public Message() {
         super();
     }
@@ -388,11 +389,11 @@ public class Message implements BotApiObject {
         return this.video != null;
     }
 
-    public boolean hasAudio(){
+    public boolean hasAudio() {
         return this.audio != null;
     }
 
-    public boolean hasVoice(){
+    public boolean hasVoice() {
         return this.voice != null;
     }
 

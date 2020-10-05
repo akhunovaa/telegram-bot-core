@@ -1,7 +1,10 @@
 package com.botmasterzzz.bot.api.impl.objects.media;
 
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+@SuppressWarnings("unused")
+@JsonDeserialize
 public class InputMediaPhoto extends InputMedia<InputMediaPhoto> {
     private static final String TYPE = "photo";
 

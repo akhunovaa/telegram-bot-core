@@ -2,8 +2,8 @@ package com.botmasterzzz.bot.api.impl.methods.update;
 
 import com.botmasterzzz.bot.api.impl.methods.BotApiMethod;
 import com.botmasterzzz.bot.api.impl.methods.ParseMode;
+import com.botmasterzzz.bot.api.impl.objects.ApiResponse;
 import com.botmasterzzz.bot.api.impl.objects.Message;
-import com.botmasterzzz.bot.api.impl.objects.replykeyboard.ApiResponse;
 import com.botmasterzzz.bot.api.impl.objects.replykeyboard.InlineKeyboardMarkup;
 import com.botmasterzzz.bot.exceptions.TelegramApiRequestException;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
@@ -13,7 +13,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.IOException;
 import java.io.Serializable;
 
-public class EditMessageText  extends BotApiMethod<Serializable> {
+public class EditMessageText extends BotApiMethod<Serializable> {
     public static final String PATH = "editmessagetext";
 
     private static final String CHATID_FIELD = "chat_id";
@@ -137,7 +137,8 @@ public class EditMessageText  extends BotApiMethod<Serializable> {
     public Serializable deserializeResponse(String answer) throws TelegramApiRequestException {
         try {
             ApiResponse<Message> result = OBJECT_MAPPER.readValue(answer,
-                    new TypeReference<ApiResponse<Message>>(){});
+                    new TypeReference<ApiResponse<Message>>() {
+                    });
             if (result.getOk()) {
                 return result.getResult();
             } else {

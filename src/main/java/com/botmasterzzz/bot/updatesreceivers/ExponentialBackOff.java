@@ -54,367 +54,393 @@ import com.google.common.base.Preconditions;
  *
  * <p>Implementation is not thread-safe.
  *
- * @since 1.15
  * @author Ravi Mistry
+ * @since 1.15
  */
 public class ExponentialBackOff {
-  /** The default initial interval value in milliseconds (0.5 seconds). */
-  public static final int DEFAULT_INITIAL_INTERVAL_MILLIS = 500;
+    /**
+     * The default initial interval value in milliseconds (0.5 seconds).
+     */
+    public static final int DEFAULT_INITIAL_INTERVAL_MILLIS = 500;
 
-  /**
-   * The default randomization factor (0.5 which results in a random period ranging between 50%
-   * below and 50% above the retry interval).
-   */
-  public static final double DEFAULT_RANDOMIZATION_FACTOR = 0.5;
+    /**
+     * The default randomization factor (0.5 which results in a random period ranging between 50%
+     * below and 50% above the retry interval).
+     */
+    public static final double DEFAULT_RANDOMIZATION_FACTOR = 0.5;
 
-  /** The default multiplier value (1.5 which is 50% increase per back off). */
-  public static final double DEFAULT_MULTIPLIER = 1.5;
+    /**
+     * The default multiplier value (1.5 which is 50% increase per back off).
+     */
+    public static final double DEFAULT_MULTIPLIER = 1.5;
 
-  /** The default maximum back off time in milliseconds (15 minutes). */
-  public static final int DEFAULT_MAX_INTERVAL_MILLIS = 30000;
+    /**
+     * The default maximum back off time in milliseconds (15 minutes).
+     */
+    public static final int DEFAULT_MAX_INTERVAL_MILLIS = 30000;
 
-  /** The default maximum elapsed time in milliseconds (60 minutes). */
-  public static final int DEFAULT_MAX_ELAPSED_TIME_MILLIS = 3600000;
-
-  /** The current retry interval in milliseconds. */
-  private int currentIntervalMillis;
-
-  /** The initial retry interval in milliseconds. */
-  private final int initialIntervalMillis;
-
-  /**
-   * The randomization factor to use for creating a range around the retry interval.
-   *
-   * <p>A randomization factor of 0.5 results in a random period ranging between 50% below and 50%
-   * above the retry interval.
-   */
-  private final double randomizationFactor;
-
-  /** The value to multiply the current interval with for each retry attempt. */
-  private final double multiplier;
-
-  /**
-   * The maximum value of the back off period in milliseconds. Once the retry interval reaches this
-   * value it stops increasing.
-   */
-  private final int maxIntervalMillis;
-
-  /**
-   * The system time in nanoseconds. It is calculated when an ExponentialBackOffPolicy instance is
-   * created and is reset when {@link #reset()} is called.
-   */
-  long startTimeNanos;
-
-  /**
-   * The maximum elapsed time after instantiating {@link ExponentialBackOff} or calling {@link
-   * #reset()} after which {@link #nextBackOffMillis()} returns this value.
-   */
-  private final int maxElapsedTimeMillis;
-
-  /**
-   * Creates an instance of ExponentialBackOffPolicy using default values.
-   *
-   * <p>To override the defaults use {@link Builder}.
-   *
-   * <ul>
-   *   <li>{@code initialIntervalMillis} defaults to {@link #DEFAULT_INITIAL_INTERVAL_MILLIS}
-   *   <li>{@code randomizationFactor} defaults to {@link #DEFAULT_RANDOMIZATION_FACTOR}
-   *   <li>{@code multiplier} defaults to {@link #DEFAULT_MULTIPLIER}
-   *   <li>{@code maxIntervalMillis} defaults to {@link #DEFAULT_MAX_INTERVAL_MILLIS}
-   *   <li>{@code maxElapsedTimeMillis} defaults in {@link #DEFAULT_MAX_ELAPSED_TIME_MILLIS}
-   * </ul>
-   */
-  public ExponentialBackOff() {
-    this(new Builder());
-  }
-
-  /** @param builder builder */
-  protected ExponentialBackOff(Builder builder) {
-    initialIntervalMillis = builder.initialIntervalMillis;
-    randomizationFactor = builder.randomizationFactor;
-    multiplier = builder.multiplier;
-    maxIntervalMillis = builder.maxIntervalMillis;
-    maxElapsedTimeMillis = builder.maxElapsedTimeMillis;
-    Preconditions.checkArgument(initialIntervalMillis > 0);
-    Preconditions.checkArgument(0 <= randomizationFactor && randomizationFactor < 1);
-    Preconditions.checkArgument(multiplier >= 1);
-    Preconditions.checkArgument(maxIntervalMillis >= initialIntervalMillis);
-    Preconditions.checkArgument(maxElapsedTimeMillis > 0);
-    reset();
-  }
-
-  /** Sets the interval back to the initial retry interval and restarts the timer. */
-  public final void reset() {
-    currentIntervalMillis = initialIntervalMillis;
-    startTimeNanos = nanoTime();
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * <p>This method calculates the next back off interval using the formula: randomized_interval =
-   * retry_interval +/- (randomization_factor * retry_interval)
-   *
-   * <p>Subclasses may override if a different algorithm is required.
-   */
-  public long nextBackOffMillis() {
-    // Make sure we have not gone over the maximum elapsed time.
-    if (getElapsedTimeMillis() > maxElapsedTimeMillis) {
-      return maxElapsedTimeMillis;
-    }
-    int randomizedInterval =
-        getRandomValueFromInterval(randomizationFactor, Math.random(), currentIntervalMillis);
-    incrementCurrentInterval();
-    return randomizedInterval;
-  }
-
-  /**
-   * Returns a random value from the interval [randomizationFactor * currentInterval,
-   * randomizationFactor * currentInterval].
-   */
-  static int getRandomValueFromInterval(
-      double randomizationFactor, double random, int currentIntervalMillis) {
-    double delta = randomizationFactor * currentIntervalMillis;
-    double minInterval = currentIntervalMillis - delta;
-    double maxInterval = currentIntervalMillis + delta;
-    // Get a random value from the range [minInterval, maxInterval].
-    // The formula used below has a +1 because if the minInterval is 1 and the maxInterval is 3 then
-    // we want a 33% chance for selecting either 1, 2 or 3.
-    int randomValue = (int) (minInterval + (random * (maxInterval - minInterval + 1)));
-    return randomValue;
-  }
-
-  /** Returns the initial retry interval in milliseconds. */
-  public final int getInitialIntervalMillis() {
-    return initialIntervalMillis;
-  }
-
-  /**
-   * Returns the randomization factor to use for creating a range around the retry interval.
-   *
-   * <p>A randomization factor of 0.5 results in a random period ranging between 50% below and 50%
-   * above the retry interval.
-   */
-  public final double getRandomizationFactor() {
-    return randomizationFactor;
-  }
-
-  /** Returns the current retry interval in milliseconds. */
-  public final int getCurrentIntervalMillis() {
-    return currentIntervalMillis;
-  }
-
-  /** Returns the value to multiply the current interval with for each retry attempt. */
-  public final double getMultiplier() {
-    return multiplier;
-  }
-
-  /**
-   * Returns the maximum value of the back off period in milliseconds. Once the current interval
-   * reaches this value it stops increasing.
-   */
-  public final int getMaxIntervalMillis() {
-    return maxIntervalMillis;
-  }
-
-  /**
-   * Returns the maximum elapsed time in milliseconds.
-   *
-   * <p>If the time elapsed since an {@link ExponentialBackOff} instance is created goes past the
-   * max_elapsed_time then the method {@link #nextBackOffMillis()} starts returning this value. The
-   * elapsed time can be reset by calling {@link #reset()}.
-   */
-  public final int getMaxElapsedTimeMillis() {
-    return maxElapsedTimeMillis;
-  }
-
-  /**
-   * Returns the elapsed time in milliseconds since an {@link ExponentialBackOff} instance is
-   * created and is reset when {@link #reset()} is called.
-   *
-   * <p>The elapsed time is computed using {@link System#nanoTime()}.
-   */
-  public final long getElapsedTimeMillis() {
-    return (nanoTime() - startTimeNanos) / 1000000;
-  }
-
-  /** Increments the current interval by multiplying it with the multiplier. */
-  private void incrementCurrentInterval() {
-    // Check for overflow, if overflow is detected set the current interval to the max interval.
-    if (currentIntervalMillis >= maxIntervalMillis / multiplier) {
-      currentIntervalMillis = maxIntervalMillis;
-    } else {
-      currentIntervalMillis *= multiplier;
-    }
-  }
-
-  /**
-   * Nano time using {@link System#nanoTime()}
-   *
-   * @return time in nanoseconds
-   */
-  private long nanoTime() {
-    return System.nanoTime();
-  }
-
-  /**
-   * Builder for {@link ExponentialBackOff}.
-   *
-   * <p>Implementation is not thread-safe.
-   */
-  public static class Builder {
-
-    /** The initial retry interval in milliseconds. */
-    int initialIntervalMillis = DEFAULT_INITIAL_INTERVAL_MILLIS;
-
+    /**
+     * The default maximum elapsed time in milliseconds (60 minutes).
+     */
+    public static final int DEFAULT_MAX_ELAPSED_TIME_MILLIS = 3600000;
+    /**
+     * The initial retry interval in milliseconds.
+     */
+    private final int initialIntervalMillis;
     /**
      * The randomization factor to use for creating a range around the retry interval.
      *
      * <p>A randomization factor of 0.5 results in a random period ranging between 50% below and 50%
      * above the retry interval.
      */
-    double randomizationFactor = DEFAULT_RANDOMIZATION_FACTOR;
-
-    /** The value to multiply the current interval with for each retry attempt. */
-    double multiplier = DEFAULT_MULTIPLIER;
+    private final double randomizationFactor;
+    /**
+     * The value to multiply the current interval with for each retry attempt.
+     */
+    private final double multiplier;
+    /**
+     * The maximum value of the back off period in milliseconds. Once the retry interval reaches this
+     * value it stops increasing.
+     */
+    private final int maxIntervalMillis;
+    /**
+     * The maximum elapsed time after instantiating {@link ExponentialBackOff} or calling {@link
+     * #reset()} after which {@link #nextBackOffMillis()} returns this value.
+     */
+    private final int maxElapsedTimeMillis;
+    /**
+     * The system time in nanoseconds. It is calculated when an ExponentialBackOffPolicy instance is
+     * created and is reset when {@link #reset()} is called.
+     */
+    long startTimeNanos;
+    /**
+     * The current retry interval in milliseconds.
+     */
+    private int currentIntervalMillis;
 
     /**
-     * The maximum value of the back off period in milliseconds. Once the retry interval reaches
-     * this value it stops increasing.
+     * Creates an instance of ExponentialBackOffPolicy using default values.
+     *
+     * <p>To override the defaults use {@link Builder}.
+     *
+     * <ul>
+     *   <li>{@code initialIntervalMillis} defaults to {@link #DEFAULT_INITIAL_INTERVAL_MILLIS}
+     *   <li>{@code randomizationFactor} defaults to {@link #DEFAULT_RANDOMIZATION_FACTOR}
+     *   <li>{@code multiplier} defaults to {@link #DEFAULT_MULTIPLIER}
+     *   <li>{@code maxIntervalMillis} defaults to {@link #DEFAULT_MAX_INTERVAL_MILLIS}
+     *   <li>{@code maxElapsedTimeMillis} defaults in {@link #DEFAULT_MAX_ELAPSED_TIME_MILLIS}
+     * </ul>
      */
-    int maxIntervalMillis = DEFAULT_MAX_INTERVAL_MILLIS;
-
-    /**
-     * The maximum elapsed time in milliseconds after instantiating {@link ExponentialBackOff} or
-     * calling {@link #reset()} after which {@link #nextBackOffMillis()} returns this value.
-     */
-    int maxElapsedTimeMillis = DEFAULT_MAX_ELAPSED_TIME_MILLIS;
-
-    public Builder() {}
-
-    /** Builds a new instance of {@link ExponentialBackOff}. */
-    public ExponentialBackOff build() {
-      return new ExponentialBackOff(this);
+    public ExponentialBackOff() {
+        this(new Builder());
     }
 
     /**
-     * Returns the initial retry interval in milliseconds. The default value is {@link
-     * #DEFAULT_INITIAL_INTERVAL_MILLIS}.
+     * @param builder builder
+     */
+    protected ExponentialBackOff(Builder builder) {
+        initialIntervalMillis = builder.initialIntervalMillis;
+        randomizationFactor = builder.randomizationFactor;
+        multiplier = builder.multiplier;
+        maxIntervalMillis = builder.maxIntervalMillis;
+        maxElapsedTimeMillis = builder.maxElapsedTimeMillis;
+        Preconditions.checkArgument(initialIntervalMillis > 0);
+        Preconditions.checkArgument(0 <= randomizationFactor && randomizationFactor < 1);
+        Preconditions.checkArgument(multiplier >= 1);
+        Preconditions.checkArgument(maxIntervalMillis >= initialIntervalMillis);
+        Preconditions.checkArgument(maxElapsedTimeMillis > 0);
+        reset();
+    }
+
+    /**
+     * Returns a random value from the interval [randomizationFactor * currentInterval,
+     * randomizationFactor * currentInterval].
+     */
+    static int getRandomValueFromInterval(
+            double randomizationFactor, double random, int currentIntervalMillis) {
+        double delta = randomizationFactor * currentIntervalMillis;
+        double minInterval = currentIntervalMillis - delta;
+        double maxInterval = currentIntervalMillis + delta;
+        // Get a random value from the range [minInterval, maxInterval].
+        // The formula used below has a +1 because if the minInterval is 1 and the maxInterval is 3 then
+        // we want a 33% chance for selecting either 1, 2 or 3.
+        int randomValue = (int) (minInterval + (random * (maxInterval - minInterval + 1)));
+        return randomValue;
+    }
+
+    /**
+     * Sets the interval back to the initial retry interval and restarts the timer.
+     */
+    public final void reset() {
+        currentIntervalMillis = initialIntervalMillis;
+        startTimeNanos = nanoTime();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>This method calculates the next back off interval using the formula: randomized_interval =
+     * retry_interval +/- (randomization_factor * retry_interval)
+     *
+     * <p>Subclasses may override if a different algorithm is required.
+     */
+    public long nextBackOffMillis() {
+        // Make sure we have not gone over the maximum elapsed time.
+        if (getElapsedTimeMillis() > maxElapsedTimeMillis) {
+            return maxElapsedTimeMillis;
+        }
+        int randomizedInterval =
+                getRandomValueFromInterval(randomizationFactor, Math.random(), currentIntervalMillis);
+        incrementCurrentInterval();
+        return randomizedInterval;
+    }
+
+    /**
+     * Returns the initial retry interval in milliseconds.
      */
     public final int getInitialIntervalMillis() {
-      return initialIntervalMillis;
+        return initialIntervalMillis;
     }
 
     /**
-     * Sets the initial retry interval in milliseconds. The default value is {@link
-     * #DEFAULT_INITIAL_INTERVAL_MILLIS}. Must be {@code > 0}.
-     *
-     * <p>Overriding is only supported for the purpose of calling the super implementation and
-     * changing the return type, but nothing else.
-     */
-    public Builder setInitialIntervalMillis(int initialIntervalMillis) {
-      this.initialIntervalMillis = initialIntervalMillis;
-      return this;
-    }
-
-    /**
-     * Returns the randomization factor to use for creating a range around the retry interval. The
-     * default value is {@link #DEFAULT_RANDOMIZATION_FACTOR}.
+     * Returns the randomization factor to use for creating a range around the retry interval.
      *
      * <p>A randomization factor of 0.5 results in a random period ranging between 50% below and 50%
      * above the retry interval.
-     *
-     * <p>Overriding is only supported for the purpose of calling the super implementation and
-     * changing the return type, but nothing else.
      */
     public final double getRandomizationFactor() {
-      return randomizationFactor;
+        return randomizationFactor;
     }
 
     /**
-     * Sets the randomization factor to use for creating a range around the retry interval. The
-     * default value is {@link #DEFAULT_RANDOMIZATION_FACTOR}. Must fall in the range {@code 0 <=
-     * randomizationFactor < 1}.
-     *
-     * <p>A randomization factor of 0.5 results in a random period ranging between 50% below and 50%
-     * above the retry interval.
-     *
-     * <p>Overriding is only supported for the purpose of calling the super implementation and
-     * changing the return type, but nothing else.
+     * Returns the current retry interval in milliseconds.
      */
-    public Builder setRandomizationFactor(double randomizationFactor) {
-      this.randomizationFactor = randomizationFactor;
-      return this;
+    public final int getCurrentIntervalMillis() {
+        return currentIntervalMillis;
     }
 
     /**
-     * Returns the value to multiply the current interval with for each retry attempt. The default
-     * value is {@link #DEFAULT_MULTIPLIER}.
+     * Returns the value to multiply the current interval with for each retry attempt.
      */
     public final double getMultiplier() {
-      return multiplier;
-    }
-
-    /**
-     * Sets the value to multiply the current interval with for each retry attempt. The default
-     * value is {@link #DEFAULT_MULTIPLIER}. Must be {@code >= 1}.
-     *
-     * <p>Overriding is only supported for the purpose of calling the super implementation and
-     * changing the return type, but nothing else.
-     */
-    public Builder setMultiplier(double multiplier) {
-      this.multiplier = multiplier;
-      return this;
+        return multiplier;
     }
 
     /**
      * Returns the maximum value of the back off period in milliseconds. Once the current interval
-     * reaches this value it stops increasing. The default value is {@link
-     * #DEFAULT_MAX_INTERVAL_MILLIS}. Must be {@code >= initialInterval}.
+     * reaches this value it stops increasing.
      */
     public final int getMaxIntervalMillis() {
-      return maxIntervalMillis;
+        return maxIntervalMillis;
     }
 
     /**
-     * Sets the maximum value of the back off period in milliseconds. Once the current interval
-     * reaches this value it stops increasing. The default value is {@link
-     * #DEFAULT_MAX_INTERVAL_MILLIS}.
-     *
-     * <p>Overriding is only supported for the purpose of calling the super implementation and
-     * changing the return type, but nothing else.
-     */
-    public Builder setMaxIntervalMillis(int maxIntervalMillis) {
-      this.maxIntervalMillis = maxIntervalMillis;
-      return this;
-    }
-
-    /**
-     * Returns the maximum elapsed time in milliseconds. The default value is {@link
-     * #DEFAULT_MAX_ELAPSED_TIME_MILLIS}.
+     * Returns the maximum elapsed time in milliseconds.
      *
      * <p>If the time elapsed since an {@link ExponentialBackOff} instance is created goes past the
-     * max_elapsed_time then the method {@link #nextBackOffMillis()} starts returning this value.
-     * The elapsed time can be reset by calling {@link #reset()}.
+     * max_elapsed_time then the method {@link #nextBackOffMillis()} starts returning this value. The
+     * elapsed time can be reset by calling {@link #reset()}.
      */
     public final int getMaxElapsedTimeMillis() {
-      return maxElapsedTimeMillis;
+        return maxElapsedTimeMillis;
     }
 
     /**
-     * Sets the maximum elapsed time in milliseconds. The default value is {@link
-     * #DEFAULT_MAX_ELAPSED_TIME_MILLIS}. Must be {@code > 0}.
+     * Returns the elapsed time in milliseconds since an {@link ExponentialBackOff} instance is
+     * created and is reset when {@link #reset()} is called.
      *
-     * <p>If the time elapsed since an {@link ExponentialBackOff} instance is created goes past the
-     * max_elapsed_time then the method {@link #nextBackOffMillis()} starts returning this value.
-     * The elapsed time can be reset by calling {@link #reset()}.
-     *
-     * <p>Overriding is only supported for the purpose of calling the super implementation and
-     * changing the return type, but nothing else.
+     * <p>The elapsed time is computed using {@link System#nanoTime()}.
      */
-    public Builder setMaxElapsedTimeMillis(int maxElapsedTimeMillis) {
-      this.maxElapsedTimeMillis = maxElapsedTimeMillis;
-      return this;
+    public final long getElapsedTimeMillis() {
+        return (nanoTime() - startTimeNanos) / 1000000;
     }
-  }
+
+    /**
+     * Increments the current interval by multiplying it with the multiplier.
+     */
+    private void incrementCurrentInterval() {
+        // Check for overflow, if overflow is detected set the current interval to the max interval.
+        if (currentIntervalMillis >= maxIntervalMillis / multiplier) {
+            currentIntervalMillis = maxIntervalMillis;
+        } else {
+            currentIntervalMillis *= multiplier;
+        }
+    }
+
+    /**
+     * Nano time using {@link System#nanoTime()}
+     *
+     * @return time in nanoseconds
+     */
+    private long nanoTime() {
+        return System.nanoTime();
+    }
+
+    /**
+     * Builder for {@link ExponentialBackOff}.
+     *
+     * <p>Implementation is not thread-safe.
+     */
+    public static class Builder {
+
+        /**
+         * The initial retry interval in milliseconds.
+         */
+        int initialIntervalMillis = DEFAULT_INITIAL_INTERVAL_MILLIS;
+
+        /**
+         * The randomization factor to use for creating a range around the retry interval.
+         *
+         * <p>A randomization factor of 0.5 results in a random period ranging between 50% below and 50%
+         * above the retry interval.
+         */
+        double randomizationFactor = DEFAULT_RANDOMIZATION_FACTOR;
+
+        /**
+         * The value to multiply the current interval with for each retry attempt.
+         */
+        double multiplier = DEFAULT_MULTIPLIER;
+
+        /**
+         * The maximum value of the back off period in milliseconds. Once the retry interval reaches
+         * this value it stops increasing.
+         */
+        int maxIntervalMillis = DEFAULT_MAX_INTERVAL_MILLIS;
+
+        /**
+         * The maximum elapsed time in milliseconds after instantiating {@link ExponentialBackOff} or
+         * calling {@link #reset()} after which {@link #nextBackOffMillis()} returns this value.
+         */
+        int maxElapsedTimeMillis = DEFAULT_MAX_ELAPSED_TIME_MILLIS;
+
+        public Builder() {
+        }
+
+        /**
+         * Builds a new instance of {@link ExponentialBackOff}.
+         */
+        public ExponentialBackOff build() {
+            return new ExponentialBackOff(this);
+        }
+
+        /**
+         * Returns the initial retry interval in milliseconds. The default value is {@link
+         * #DEFAULT_INITIAL_INTERVAL_MILLIS}.
+         */
+        public final int getInitialIntervalMillis() {
+            return initialIntervalMillis;
+        }
+
+        /**
+         * Sets the initial retry interval in milliseconds. The default value is {@link
+         * #DEFAULT_INITIAL_INTERVAL_MILLIS}. Must be {@code > 0}.
+         *
+         * <p>Overriding is only supported for the purpose of calling the super implementation and
+         * changing the return type, but nothing else.
+         */
+        public Builder setInitialIntervalMillis(int initialIntervalMillis) {
+            this.initialIntervalMillis = initialIntervalMillis;
+            return this;
+        }
+
+        /**
+         * Returns the randomization factor to use for creating a range around the retry interval. The
+         * default value is {@link #DEFAULT_RANDOMIZATION_FACTOR}.
+         *
+         * <p>A randomization factor of 0.5 results in a random period ranging between 50% below and 50%
+         * above the retry interval.
+         *
+         * <p>Overriding is only supported for the purpose of calling the super implementation and
+         * changing the return type, but nothing else.
+         */
+        public final double getRandomizationFactor() {
+            return randomizationFactor;
+        }
+
+        /**
+         * Sets the randomization factor to use for creating a range around the retry interval. The
+         * default value is {@link #DEFAULT_RANDOMIZATION_FACTOR}. Must fall in the range {@code 0 <=
+         * randomizationFactor < 1}.
+         *
+         * <p>A randomization factor of 0.5 results in a random period ranging between 50% below and 50%
+         * above the retry interval.
+         *
+         * <p>Overriding is only supported for the purpose of calling the super implementation and
+         * changing the return type, but nothing else.
+         */
+        public Builder setRandomizationFactor(double randomizationFactor) {
+            this.randomizationFactor = randomizationFactor;
+            return this;
+        }
+
+        /**
+         * Returns the value to multiply the current interval with for each retry attempt. The default
+         * value is {@link #DEFAULT_MULTIPLIER}.
+         */
+        public final double getMultiplier() {
+            return multiplier;
+        }
+
+        /**
+         * Sets the value to multiply the current interval with for each retry attempt. The default
+         * value is {@link #DEFAULT_MULTIPLIER}. Must be {@code >= 1}.
+         *
+         * <p>Overriding is only supported for the purpose of calling the super implementation and
+         * changing the return type, but nothing else.
+         */
+        public Builder setMultiplier(double multiplier) {
+            this.multiplier = multiplier;
+            return this;
+        }
+
+        /**
+         * Returns the maximum value of the back off period in milliseconds. Once the current interval
+         * reaches this value it stops increasing. The default value is {@link
+         * #DEFAULT_MAX_INTERVAL_MILLIS}. Must be {@code >= initialInterval}.
+         */
+        public final int getMaxIntervalMillis() {
+            return maxIntervalMillis;
+        }
+
+        /**
+         * Sets the maximum value of the back off period in milliseconds. Once the current interval
+         * reaches this value it stops increasing. The default value is {@link
+         * #DEFAULT_MAX_INTERVAL_MILLIS}.
+         *
+         * <p>Overriding is only supported for the purpose of calling the super implementation and
+         * changing the return type, but nothing else.
+         */
+        public Builder setMaxIntervalMillis(int maxIntervalMillis) {
+            this.maxIntervalMillis = maxIntervalMillis;
+            return this;
+        }
+
+        /**
+         * Returns the maximum elapsed time in milliseconds. The default value is {@link
+         * #DEFAULT_MAX_ELAPSED_TIME_MILLIS}.
+         *
+         * <p>If the time elapsed since an {@link ExponentialBackOff} instance is created goes past the
+         * max_elapsed_time then the method {@link #nextBackOffMillis()} starts returning this value.
+         * The elapsed time can be reset by calling {@link #reset()}.
+         */
+        public final int getMaxElapsedTimeMillis() {
+            return maxElapsedTimeMillis;
+        }
+
+        /**
+         * Sets the maximum elapsed time in milliseconds. The default value is {@link
+         * #DEFAULT_MAX_ELAPSED_TIME_MILLIS}. Must be {@code > 0}.
+         *
+         * <p>If the time elapsed since an {@link ExponentialBackOff} instance is created goes past the
+         * max_elapsed_time then the method {@link #nextBackOffMillis()} starts returning this value.
+         * The elapsed time can be reset by calling {@link #reset()}.
+         *
+         * <p>Overriding is only supported for the purpose of calling the super implementation and
+         * changing the return type, but nothing else.
+         */
+        public Builder setMaxElapsedTimeMillis(int maxElapsedTimeMillis) {
+            this.maxElapsedTimeMillis = maxElapsedTimeMillis;
+            return this;
+        }
+    }
 }

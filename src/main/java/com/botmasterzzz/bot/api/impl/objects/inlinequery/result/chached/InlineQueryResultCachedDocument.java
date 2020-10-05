@@ -5,7 +5,9 @@ import com.botmasterzzz.bot.api.impl.objects.inlinequery.result.InlineQueryResul
 import com.botmasterzzz.bot.api.impl.objects.replykeyboard.InlineKeyboardMarkup;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+@JsonDeserialize
 public class InlineQueryResultCachedDocument implements InlineQueryResult {
 
     private static final String TYPE_FIELD = "type";
@@ -19,23 +21,23 @@ public class InlineQueryResultCachedDocument implements InlineQueryResult {
     private static final String PARSEMODE_FIELD = "parse_mode";
 
     @JsonProperty(TYPE_FIELD)
-    private final String type = "document";
+    private final String type = "document"; ///< Type of the result, must be "document"
     @JsonProperty(ID_FIELD)
-    private String id;
+    private String id; ///< Unique identifier of this result, 1-64 bytes
     @JsonProperty(TITLE_FIELD)
-    private String title;
+    private String title; ///< Optional. Title for the result
     @JsonProperty(DOCUMENT_FILE_ID_FIELD)
-    private String documentFileId;
+    private String documentFileId; ///< A valid file identifier for the file
     @JsonProperty(DESCRIPTION_FIELD)
-    private String description;
+    private String description; ///< Optional. Short description of the result
     @JsonProperty(CAPTION_FIELD)
-    private String caption;
+    private String caption; ///< Optional. Caption of the document to be sent, 0-200 characters
     @JsonProperty(REPLY_MARKUP_FIELD)
-    private InlineKeyboardMarkup replyMarkup;
+    private InlineKeyboardMarkup replyMarkup; ///< Optional. Inline keyboard attached to the message
     @JsonProperty(INPUTMESSAGECONTENT_FIELD)
-    private InputMessageContent inputMessageContent;
+    private InputMessageContent inputMessageContent; ///< Optional. Content of the message to be sent instead of the file
     @JsonProperty(PARSEMODE_FIELD)
-    private String parseMode;
+    private String parseMode; ///< Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 
     public InlineQueryResultCachedDocument() {
         super();

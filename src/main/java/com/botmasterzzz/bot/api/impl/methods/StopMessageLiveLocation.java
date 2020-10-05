@@ -1,7 +1,7 @@
 package com.botmasterzzz.bot.api.impl.methods;
 
+import com.botmasterzzz.bot.api.impl.objects.ApiResponse;
 import com.botmasterzzz.bot.api.impl.objects.Message;
-import com.botmasterzzz.bot.api.impl.objects.replykeyboard.ApiResponse;
 import com.botmasterzzz.bot.api.impl.objects.replykeyboard.InlineKeyboardMarkup;
 import com.botmasterzzz.bot.exceptions.TelegramApiRequestException;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
@@ -84,7 +84,8 @@ public class StopMessageLiveLocation extends BotApiMethod<Serializable> {
     public Serializable deserializeResponse(String answer) throws TelegramApiRequestException {
         try {
             ApiResponse<Message> result = OBJECT_MAPPER.readValue(answer,
-                    new TypeReference<ApiResponse<Message>>(){});
+                    new TypeReference<ApiResponse<Message>>() {
+                    });
             if (result.getOk()) {
                 return result.getResult();
             } else {

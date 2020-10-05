@@ -2,16 +2,20 @@ package com.botmasterzzz.bot.api.impl.objects.media;
 
 import com.botmasterzzz.bot.api.InputBotApiObject;
 import com.botmasterzzz.bot.api.Validable;
+import com.botmasterzzz.bot.api.impl.objects.media.serialization.InputMediaDeserializer;
+import com.botmasterzzz.bot.api.impl.objects.media.serialization.InputMediaSerializer;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.io.File;
 import java.io.InputStream;
 
-@SuppressWarnings({"WeakerAccess", "unchecked"})
+@SuppressWarnings({"unchecked"})
 @JsonSerialize(using = InputMediaSerializer.class)
+@JsonDeserialize(using = InputMediaDeserializer.class)
 public abstract class InputMedia<T> implements InputBotApiObject, Validable {
     public static final String TYPE_FIELD = "type";
     public static final String MEDIA_FIELD = "media";
@@ -21,17 +25,17 @@ public abstract class InputMedia<T> implements InputBotApiObject, Validable {
     @JsonProperty(MEDIA_FIELD)
     private String media;
     @JsonProperty(CAPTION_FIELD)
-    private String caption;
+    private String caption; ///< Optional. Caption of the media to be sent, 0-200 characters
     @JsonProperty(PARSEMODE_FIELD)
-    private String parseMode;
+    private String parseMode; ///< Optional. Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
     @JsonIgnore
-    private boolean isNewMedia;
+    private boolean isNewMedia; ///< True to upload a new media, false to use a fileId or URL
     @JsonIgnore
-    private String mediaName;
+    private String mediaName; ///< Name of the media to upload
     @JsonIgnore
-    private File newMediaFile;
+    private File newMediaFile; ///< New media file
     @JsonIgnore
-    private InputStream newMediaStream;
+    private InputStream newMediaStream; ///< New media stream
 
     public InputMedia() {
         super();
@@ -62,7 +66,6 @@ public abstract class InputMedia<T> implements InputBotApiObject, Validable {
     public boolean isNewMedia() {
         return isNewMedia;
     }
-
 
     public T setMedia(String media) {
         this.media = media;

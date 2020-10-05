@@ -1,8 +1,8 @@
 package com.botmasterzzz.bot.api.impl.methods.send;
 
 import com.botmasterzzz.bot.api.impl.methods.BotApiMethod;
+import com.botmasterzzz.bot.api.impl.objects.ApiResponse;
 import com.botmasterzzz.bot.api.impl.objects.Message;
-import com.botmasterzzz.bot.api.impl.objects.replykeyboard.ApiResponse;
 import com.botmasterzzz.bot.api.impl.objects.replykeyboard.ReplyKeyboard;
 import com.botmasterzzz.bot.exceptions.TelegramApiRequestException;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
@@ -133,7 +133,8 @@ public class SendLocation extends BotApiMethod<Message> {
     public Message deserializeResponse(String answer) throws TelegramApiRequestException {
         try {
             ApiResponse<Message> result = OBJECT_MAPPER.readValue(answer,
-                    new TypeReference<ApiResponse<Message>>(){});
+                    new TypeReference<ApiResponse<Message>>() {
+                    });
             if (result.getOk()) {
                 return result.getResult();
             } else {

@@ -37,14 +37,14 @@ import java.util.concurrent.TimeUnit;
 
 import static com.botmasterzzz.bot.Constants.SOCKET_TIMEOUT;
 
-public abstract class DefaultSender extends Sender{
+public abstract class DefaultSender extends Sender {
 
     private static final ContentType TEXT_PLAIN_CONTENT_TYPE = ContentType.create("text/plain", StandardCharsets.UTF_8);
 
     private final ExecutorService exe;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final DefaultBotOptions options;
-    private volatile CloseableHttpClient httpclient;
+    private final CloseableHttpClient httpclient;
     private volatile RequestConfig requestConfig;
 
     protected DefaultSender(DefaultBotOptions options) {

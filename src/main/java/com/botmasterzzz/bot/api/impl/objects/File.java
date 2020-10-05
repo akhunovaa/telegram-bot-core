@@ -23,6 +23,13 @@ public class File implements BotApiObject {
         super();
     }
 
+    public static String getFileUrl(String botToken, String filePath) {
+        if (botToken == null || botToken.isEmpty()) {
+            throw new InvalidParameterException("Bot token can't be empty");
+        }
+        return MessageFormat.format("https://api.telegram.org/file/bot{0}/{1}", botToken, filePath);
+    }
+
     public String getFileId() {
         return fileId;
     }
@@ -46,12 +53,5 @@ public class File implements BotApiObject {
 
     public String getFileUrl(String botToken) {
         return getFileUrl(botToken, filePath);
-    }
-
-    public static String getFileUrl(String botToken, String filePath) {
-        if (botToken == null || botToken.isEmpty()) {
-            throw new InvalidParameterException("Bot token can't be empty");
-        }
-        return MessageFormat.format("https://api.telegram.org/file/bot{0}/{1}", botToken, filePath);
     }
 }

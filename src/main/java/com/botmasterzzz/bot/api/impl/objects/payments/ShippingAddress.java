@@ -3,7 +3,7 @@ package com.botmasterzzz.bot.api.impl.objects.payments;
 import com.botmasterzzz.bot.api.BotApiObject;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ShippingAddress  implements BotApiObject {
+public class ShippingAddress implements BotApiObject {
 
     private static final String COUNTRY_CODE_FIELD = "country_code";
     private static final String STATE_FIELD = "state";

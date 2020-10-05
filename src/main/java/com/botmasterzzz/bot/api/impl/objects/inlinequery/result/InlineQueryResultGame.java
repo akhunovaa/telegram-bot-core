@@ -3,7 +3,9 @@ package com.botmasterzzz.bot.api.impl.objects.inlinequery.result;
 import com.botmasterzzz.bot.api.impl.objects.replykeyboard.InlineKeyboardMarkup;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+@JsonDeserialize
 public class InlineQueryResultGame implements InlineQueryResult {
 
     private static final String TYPE_FIELD = "type";

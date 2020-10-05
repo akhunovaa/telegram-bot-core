@@ -10,107 +10,107 @@ import org.apache.http.protocol.HttpContext;
 import java.util.List;
 
 public class DefaultBotOptions implements BotOptions {
-  private int maxThreads;
-  private RequestConfig requestConfig;
-  private volatile HttpContext httpContext;
-  private ExponentialBackOff exponentialBackOff;
-  private Integer maxWebhookConnections;
-  private String baseUrl;
-  private List<String> allowedUpdates;
-  private ProxyType proxyType;
-  private String proxyHost;
-  private int proxyPort;
+    private int maxThreads;
+    private RequestConfig requestConfig;
+    private volatile HttpContext httpContext;
+    private ExponentialBackOff exponentialBackOff;
+    private Integer maxWebhookConnections;
+    private String baseUrl;
+    private List<String> allowedUpdates;
+    private ProxyType proxyType;
+    private String proxyHost;
+    private int proxyPort;
 
-  public enum ProxyType {
-    NO_PROXY,
-    HTTP
-  }
+    public DefaultBotOptions() {
+        maxThreads = 1;
+        baseUrl = Constants.BASE_URL;
+        httpContext = HttpClientContext.create();
+        proxyType = ProxyType.NO_PROXY;
+    }
 
-  public DefaultBotOptions() {
-    maxThreads = 1;
-    baseUrl = Constants.BASE_URL;
-    httpContext = HttpClientContext.create();
-    proxyType = ProxyType.NO_PROXY;
-  }
+    @Override
+    public String getBaseUrl() {
+        return baseUrl;
+    }
 
-  @Override
-  public String getBaseUrl() {
-    return baseUrl;
-  }
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
 
-  public void setBaseUrl(String baseUrl) {
-    this.baseUrl = baseUrl;
-  }
+    public int getMaxThreads() {
+        return maxThreads;
+    }
 
-  public void setMaxThreads(int maxThreads) {
-    this.maxThreads = maxThreads;
-  }
+    public void setMaxThreads(int maxThreads) {
+        this.maxThreads = maxThreads;
+    }
 
-  public int getMaxThreads() {
-    return maxThreads;
-  }
+    public RequestConfig getRequestConfig() {
+        return requestConfig;
+    }
 
-  public RequestConfig getRequestConfig() {
-    return requestConfig;
-  }
+    public void setRequestConfig(RequestConfig requestConfig) {
+        this.requestConfig = requestConfig;
+    }
 
-  public Integer getMaxWebhookConnections() {
-    return maxWebhookConnections;
-  }
+    public Integer getMaxWebhookConnections() {
+        return maxWebhookConnections;
+    }
 
-  public HttpContext getHttpContext() {
-    return httpContext;
-  }
+    public void setMaxWebhookConnections(Integer maxWebhookConnections) {
+        this.maxWebhookConnections = maxWebhookConnections;
+    }
 
-  public void setHttpContext(HttpContext httpContext) {
-    this.httpContext = httpContext;
-  }
+    public HttpContext getHttpContext() {
+        return httpContext;
+    }
 
-  public void setMaxWebhookConnections(Integer maxWebhookConnections) {
-    this.maxWebhookConnections = maxWebhookConnections;
-  }
+    public void setHttpContext(HttpContext httpContext) {
+        this.httpContext = httpContext;
+    }
 
-  public List<String> getAllowedUpdates() {
-    return allowedUpdates;
-  }
+    public List<String> getAllowedUpdates() {
+        return allowedUpdates;
+    }
 
-  public void setAllowedUpdates(List<String> allowedUpdates) {
-    this.allowedUpdates = allowedUpdates;
-  }
+    public void setAllowedUpdates(List<String> allowedUpdates) {
+        this.allowedUpdates = allowedUpdates;
+    }
 
-  public void setRequestConfig(RequestConfig requestConfig) {
-    this.requestConfig = requestConfig;
-  }
+    public ExponentialBackOff getExponentialBackOff() {
+        return exponentialBackOff;
+    }
 
-  public ExponentialBackOff getExponentialBackOff() {
-    return exponentialBackOff;
-  }
+    public void setExponentialBackOff(ExponentialBackOff exponentialBackOff) {
+        this.exponentialBackOff = exponentialBackOff;
+    }
 
-  public void setExponentialBackOff(ExponentialBackOff exponentialBackOff) {
-    this.exponentialBackOff = exponentialBackOff;
-  }
+    public String getProxyType() {
+        return proxyType.name().toUpperCase();
+    }
 
-  public String getProxyType() {
-    return proxyType.name().toUpperCase();
-  }
+    public void setProxyType(ProxyType proxyType) {
+        this.proxyType = proxyType;
+    }
 
-  public void setProxyType(ProxyType proxyType) {
-    this.proxyType = proxyType;
-  }
+    public String getProxyHost() {
+        return proxyHost;
+    }
 
-  public String getProxyHost() {
-    return proxyHost;
-  }
+    public void setProxyHost(String proxyHost) {
+        this.proxyHost = proxyHost;
+    }
 
-  public void setProxyHost(String proxyHost) {
-    this.proxyHost = proxyHost;
-  }
+    public int getProxyPort() {
+        return proxyPort;
+    }
 
-  public int getProxyPort() {
-    return proxyPort;
-  }
+    public void setProxyPort(int proxyPort) {
+        this.proxyPort = proxyPort;
+    }
 
-  public void setProxyPort(int proxyPort) {
-    this.proxyPort = proxyPort;
-  }
+    public enum ProxyType {
+        NO_PROXY,
+        HTTP
+    }
 }

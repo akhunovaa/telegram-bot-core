@@ -1,13 +1,14 @@
 package com.botmasterzzz.bot.api.impl.methods.polls;
 
 import com.botmasterzzz.bot.api.impl.methods.BotApiMethod;
+import com.botmasterzzz.bot.api.impl.objects.ApiResponse;
 import com.botmasterzzz.bot.api.impl.objects.Message;
-import com.botmasterzzz.bot.api.impl.objects.replykeyboard.ApiResponse;
 import com.botmasterzzz.bot.api.impl.objects.replykeyboard.ReplyKeyboard;
 import com.botmasterzzz.bot.exceptions.TelegramApiRequestException;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,6 +38,7 @@ public class SendPoll extends BotApiMethod<Message> {
     @JsonProperty(REPLYTOMESSAGEID_FIELD)
     private Integer replyToMessageId;
     @JsonProperty(REPLYMARKUP_FIELD)
+    @JsonDeserialize()
     private ReplyKeyboard replyMarkup;
 
     public SendPoll() {
@@ -130,7 +132,8 @@ public class SendPoll extends BotApiMethod<Message> {
     public Message deserializeResponse(String answer) throws TelegramApiRequestException {
         try {
             ApiResponse<Message> result = OBJECT_MAPPER.readValue(answer,
-                    new TypeReference<ApiResponse<Message>>(){});
+                    new TypeReference<ApiResponse<Message>>() {
+                    });
             if (result.getOk()) {
                 return result.getResult();
             } else {

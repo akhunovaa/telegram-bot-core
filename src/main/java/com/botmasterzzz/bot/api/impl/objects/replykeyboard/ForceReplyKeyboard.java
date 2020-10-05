@@ -2,15 +2,18 @@ package com.botmasterzzz.bot.api.impl.objects.replykeyboard;
 
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.Objects;
 
+@JsonDeserialize
 public class ForceReplyKeyboard implements ReplyKeyboard {
     private static final String FORCEREPLY_FIELD = "force_reply";
     private static final String SELECTIVE_FIELD = "selective";
 
     @JsonProperty(FORCEREPLY_FIELD)
-    private Boolean forceReply;
+    private final Boolean forceReply;
+
     @JsonProperty(SELECTIVE_FIELD)
     private Boolean selective;
 

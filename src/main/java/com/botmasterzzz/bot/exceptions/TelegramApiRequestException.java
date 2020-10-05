@@ -1,14 +1,14 @@
 package com.botmasterzzz.bot.exceptions;
 
+import com.botmasterzzz.bot.api.impl.objects.ApiResponse;
 import com.botmasterzzz.bot.api.impl.objects.ResponseParameters;
-import com.botmasterzzz.bot.api.impl.objects.replykeyboard.ApiResponse;
 import com.botmasterzzz.bot.logging.BotLogger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 
 import java.io.IOException;
 
-public class TelegramApiRequestException extends TelegramApiException  {
+public class TelegramApiRequestException extends TelegramApiException {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final String ERRORDESCRIPTIONFIELD = "description";
     private static final String ERRORCODEFIELD = "error_code";

@@ -7,12 +7,12 @@ import java.util.logging.Logger;
 public class BotLogger {
     private static final Logger logger = Logger.getLogger("Telegram Bots Api");
 
-    public static void setLevel(Level level) {
-        logger.setLevel(level);
-    }
-
     public static Level getLevel() {
         return logger.getLevel();
+    }
+
+    public static void setLevel(Level level) {
+        logger.setLevel(level);
     }
 
     public static void registerLogger(Handler handler) {

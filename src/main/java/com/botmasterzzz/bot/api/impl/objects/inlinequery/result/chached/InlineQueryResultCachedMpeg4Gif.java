@@ -5,7 +5,9 @@ import com.botmasterzzz.bot.api.impl.objects.inlinequery.result.InlineQueryResul
 import com.botmasterzzz.bot.api.impl.objects.replykeyboard.InlineKeyboardMarkup;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+@JsonDeserialize
 public class InlineQueryResultCachedMpeg4Gif implements InlineQueryResult {
 
     private static final String TYPE_FIELD = "type";
@@ -18,21 +20,21 @@ public class InlineQueryResultCachedMpeg4Gif implements InlineQueryResult {
     private static final String PARSEMODE_FIELD = "parse_mode";
 
     @JsonProperty(TYPE_FIELD)
-    private final String type = "mpeg4_gif";
+    private final String type = "mpeg4_gif"; ///< Type of the result, must be "mpeg4_gif"
     @JsonProperty(ID_FIELD)
-    private String id;
+    private String id; ///< Unique identifier of this result, 1-64 bytes
     @JsonProperty(MPEG4_FILE_ID_FIELD)
-    private String mpeg4FileId;
+    private String mpeg4FileId; ///< A valid file identifier for the MP4 file
     @JsonProperty(TITLE_FIELD)
-    private String title;
+    private String title; ///< Optional. Title for the result
     @JsonProperty(CAPTION_FIELD)
-    private String caption;
+    private String caption; ///< Optional. Caption of the MPEG-4 file to be sent
     @JsonProperty(INPUTMESSAGECONTENT_FIELD)
-    private InputMessageContent inputMessageContent;
+    private InputMessageContent inputMessageContent; ///< Optional. Content of the message to be sent instead of the photo
     @JsonProperty(REPLY_MARKUP_FIELD)
-    private InlineKeyboardMarkup replyMarkup;
+    private InlineKeyboardMarkup replyMarkup; ///< Optional. Inline keyboard attached to the message
     @JsonProperty(PARSEMODE_FIELD)
-    private String parseMode;
+    private String parseMode; ///< Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 
     public InlineQueryResultCachedMpeg4Gif() {
         super();

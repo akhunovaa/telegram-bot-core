@@ -2,13 +2,14 @@ package com.botmasterzzz.bot.api.impl.methods.send;
 
 import com.botmasterzzz.bot.api.impl.methods.BotApiMethod;
 import com.botmasterzzz.bot.api.impl.methods.ParseMode;
+import com.botmasterzzz.bot.api.impl.objects.ApiResponse;
 import com.botmasterzzz.bot.api.impl.objects.Message;
-import com.botmasterzzz.bot.api.impl.objects.replykeyboard.ApiResponse;
 import com.botmasterzzz.bot.api.impl.objects.replykeyboard.ReplyKeyboard;
 import com.botmasterzzz.bot.exceptions.TelegramApiRequestException;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -27,19 +28,20 @@ public class SendMessage extends BotApiMethod<Message> {
     private static final String REPLYMARKUP_FIELD = "reply_markup";
 
     @JsonProperty(CHATID_FIELD)
-    private String chatId;
+    private String chatId; ///< Unique identifier for the chat to send the message to (Or username for channels)
     @JsonProperty(TEXT_FIELD)
-    private String text;
+    private String text; ///< Text of the message to be sent
     @JsonProperty(PARSEMODE_FIELD)
-    private String parseMode;
+    private String parseMode; ///< Optional. Send Markdown, if you want Telegram apps to show bold, italic and URL text in your bot's message.
     @JsonProperty(DISABLEWEBPAGEPREVIEW_FIELD)
-    private Boolean disableWebPagePreview;
+    private Boolean disableWebPagePreview; ///< Optional. Disables link previews for links in this message
     @JsonProperty(DISABLENOTIFICATION_FIELD)
-    private Boolean disableNotification;
+    private Boolean disableNotification; ///< Optional. Sends the message silently. Users will receive a notification with no sound.
     @JsonProperty(REPLYTOMESSAGEID_FIELD)
-    private Integer replyToMessageId;
+    private Integer replyToMessageId; ///< Optional. If the message is a reply, ID of the original message
     @JsonProperty(REPLYMARKUP_FIELD)
-    private ReplyKeyboard replyMarkup;
+    @JsonDeserialize()
+    private ReplyKeyboard replyMarkup; ///< Optional. JSON-serialized object for a custom reply keyboard
 
     public SendMessage() {
         super();
@@ -148,6 +150,15 @@ public class SendMessage extends BotApiMethod<Message> {
         return this;
     }
 
+    public SendMessage enableMarkdownV2(boolean enable) {
+        if (enable) {
+            this.parseMode = ParseMode.MARKDOWNV2;
+        } else {
+            this.parseMode = null;
+        }
+        return this;
+    }
+
     @Override
     public String getMethod() {
         return PATH;
@@ -157,7 +168,8 @@ public class SendMessage extends BotApiMethod<Message> {
     public Message deserializeResponse(String answer) throws TelegramApiRequestException {
         try {
             ApiResponse<Message> result = OBJECT_MAPPER.readValue(answer,
-                    new TypeReference<ApiResponse<Message>>(){});
+                    new TypeReference<ApiResponse<Message>>() {
+                    });
             if (result.getOk()) {
                 return result.getResult();
             } else {
@@ -216,6 +228,7 @@ public class SendMessage extends BotApiMethod<Message> {
                 "chatId='" + chatId + '\'' +
                 ", text='" + text + '\'' +
                 ", parseMode='" + parseMode + '\'' +
+                ", disableNotification='" + disableNotification + '\'' +
                 ", disableWebPagePreview=" + disableWebPagePreview +
                 ", replyToMessageId=" + replyToMessageId +
                 ", replyMarkup=" + replyMarkup +

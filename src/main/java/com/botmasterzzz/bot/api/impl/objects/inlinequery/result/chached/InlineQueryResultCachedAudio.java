@@ -5,8 +5,9 @@ import com.botmasterzzz.bot.api.impl.objects.inlinequery.result.InlineQueryResul
 import com.botmasterzzz.bot.api.impl.objects.replykeyboard.InlineKeyboardMarkup;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-
+@JsonDeserialize
 public class InlineQueryResultCachedAudio implements InlineQueryResult {
 
     private static final String TYPE_FIELD = "type";
@@ -18,19 +19,19 @@ public class InlineQueryResultCachedAudio implements InlineQueryResult {
     private static final String PARSEMODE_FIELD = "parse_mode";
 
     @JsonProperty(TYPE_FIELD)
-    private final String type = "audio";
+    private final String type = "audio"; ///< Type of the result, must be "audio"
     @JsonProperty(ID_FIELD)
-    private String id;
+    private String id; ///< Unique identifier of this result
     @JsonProperty(AUDIO_FILE_ID_FIELD)
-    private String audioFileId;
+    private String audioFileId; ///< A valid file identifier for the audio file
     @JsonProperty(INPUTMESSAGECONTENT_FIELD)
-    private InputMessageContent inputMessageContent;
+    private InputMessageContent inputMessageContent; ///< Optional. Content of the message to be sent instead of the audio
     @JsonProperty(REPLY_MARKUP_FIELD)
-    private InlineKeyboardMarkup replyMarkup;
+    private InlineKeyboardMarkup replyMarkup; ///< Optional. Inline keyboard attached to the message
     @JsonProperty(CAPTION_FIELD)
-    private String caption;
+    private String caption; ///< Optional. Audio caption (may also be used when resending documents by file_id), 0-200 characters
     @JsonProperty(PARSEMODE_FIELD)
-    private String parseMode;
+    private String parseMode; ///< Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 
     public InlineQueryResultCachedAudio() {
         super();

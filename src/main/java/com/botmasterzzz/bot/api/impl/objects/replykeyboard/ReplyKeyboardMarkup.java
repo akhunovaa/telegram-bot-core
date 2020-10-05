@@ -3,23 +3,26 @@ package com.botmasterzzz.bot.api.impl.objects.replykeyboard;
 import com.botmasterzzz.bot.api.impl.objects.replykeyboard.buttons.KeyboardRow;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@JsonDeserialize
 public class ReplyKeyboardMarkup implements ReplyKeyboard {
+
     private static final String KEYBOARD_FIELD = "keyboard";
     private static final String RESIZEKEYBOARD_FIELD = "resize_keyboard";
     private static final String ONETIMEKEYBOARD_FIELD = "one_time_keyboard";
     private static final String SELECTIVE_FIELD = "selective";
 
     @JsonProperty(KEYBOARD_FIELD)
-    private List<KeyboardRow> keyboard;
+    private List<KeyboardRow> keyboard; ///< Array of button rows, each represented by an Array of Strings
     @JsonProperty(RESIZEKEYBOARD_FIELD)
-    private Boolean resizeKeyboard;
+    private Boolean resizeKeyboard; ///< Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false.
     @JsonProperty(ONETIMEKEYBOARD_FIELD)
-    private Boolean oneTimeKeyboard;
+    private Boolean oneTimeKeyboard; ///< Optional. Requests clients to hide the keyboard as soon as it's been used. Defaults to false.
 
     @JsonProperty(SELECTIVE_FIELD)
     private Boolean selective;
@@ -27,6 +30,11 @@ public class ReplyKeyboardMarkup implements ReplyKeyboard {
     public ReplyKeyboardMarkup() {
         super();
         keyboard = new ArrayList<>();
+    }
+
+    public ReplyKeyboardMarkup(List<KeyboardRow> keyboard) {
+        super();
+        this.keyboard = keyboard;
     }
 
     public List<KeyboardRow> getKeyboard() {

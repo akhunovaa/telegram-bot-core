@@ -1,6 +1,6 @@
 package com.botmasterzzz.bot.api.impl.methods;
 
-import com.botmasterzzz.bot.api.impl.objects.replykeyboard.ApiResponse;
+import com.botmasterzzz.bot.api.impl.objects.ApiResponse;
 import com.botmasterzzz.bot.exceptions.TelegramApiRequestException;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -46,7 +46,8 @@ public class GetFile extends BotApiMethod<File> {
     public File deserializeResponse(String answer) throws TelegramApiRequestException {
         try {
             ApiResponse<File> result = OBJECT_MAPPER.readValue(answer,
-                    new TypeReference<ApiResponse<File>>(){});
+                    new TypeReference<ApiResponse<File>>() {
+                    });
             if (result.getOk()) {
                 return result.getResult();
             } else {

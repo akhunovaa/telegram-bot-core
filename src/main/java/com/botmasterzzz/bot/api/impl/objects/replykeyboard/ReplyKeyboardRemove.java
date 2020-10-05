@@ -2,15 +2,17 @@ package com.botmasterzzz.bot.api.impl.objects.replykeyboard;
 
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.Objects;
 
+@JsonDeserialize
 public class ReplyKeyboardRemove implements ReplyKeyboard {
     private static final String REMOVEKEYBOARD_FIELD = "remove_keyboard";
     private static final String SELECTIVE_FIELD = "selective";
 
     @JsonProperty(REMOVEKEYBOARD_FIELD)
-    private Boolean removeKeyboard;
+    private final Boolean removeKeyboard; ///< Requests clients to remove the custom keyboard
 
     @JsonProperty(SELECTIVE_FIELD)
     private Boolean selective;

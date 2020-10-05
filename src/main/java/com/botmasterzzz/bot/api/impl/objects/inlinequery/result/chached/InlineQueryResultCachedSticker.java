@@ -5,7 +5,9 @@ import com.botmasterzzz.bot.api.impl.objects.inlinequery.result.InlineQueryResul
 import com.botmasterzzz.bot.api.impl.objects.replykeyboard.InlineKeyboardMarkup;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+@JsonDeserialize
 public class InlineQueryResultCachedSticker implements InlineQueryResult {
 
     private static final String TYPE_FIELD = "type";
@@ -15,15 +17,15 @@ public class InlineQueryResultCachedSticker implements InlineQueryResult {
     private static final String REPLY_MARKUP_FIELD = "reply_markup";
 
     @JsonProperty(TYPE_FIELD)
-    private final String type = "sticker";
+    private final String type = "sticker"; ///< Type of the result, must be "sticker"
     @JsonProperty(ID_FIELD)
-    private String id;
+    private String id; ///< Unique identifier of this result, 1-64 bytes
     @JsonProperty(STICKER_FILE_ID_FIELD)
-    private String stickerFileId;
+    private String stickerFileId; ///< A valid file identifier of the sticker
     @JsonProperty(INPUTMESSAGECONTENT_FIELD)
-    private InputMessageContent inputMessageContent;
+    private InputMessageContent inputMessageContent; ///< Optional. Content of the message to be sent instead of the sticker
     @JsonProperty(REPLY_MARKUP_FIELD)
-    private InlineKeyboardMarkup replyMarkup;
+    private InlineKeyboardMarkup replyMarkup; ///< Optional. Inline keyboard attached to the message
 
     public InlineQueryResultCachedSticker() {
         super();

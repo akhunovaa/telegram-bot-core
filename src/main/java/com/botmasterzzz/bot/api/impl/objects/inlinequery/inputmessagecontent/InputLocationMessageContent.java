@@ -2,11 +2,13 @@ package com.botmasterzzz.bot.api.impl.objects.inlinequery.inputmessagecontent;
 
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+@JsonDeserialize
 public class InputLocationMessageContent implements InputMessageContent {
 
     private static final String LATITUDE_FIELD = "latitude";

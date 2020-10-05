@@ -22,13 +22,22 @@ public class CallbackQuery implements BotApiObject {
     private Message message;
     @JsonProperty(INLINE_MESSAGE_ID_FIELD)
     private String inlineMessageId; ///< Optional. Identifier of the message sent via the bot in inline mode, that originated the query
-
+    /**
+     * Optional. Data associated with the callback button.
+     *
+     * @note Be aware that a bad client can send arbitrary data in this field
+     */
     @JsonProperty(DATA_FIELD)
     private String data;
-
+    /**
+     * Optional. Short name of a Game to be returned, serves as the unique identifier for the game
+     */
     @JsonProperty(GAMESHORTNAME_FIELD)
     private String gameShortName;
-
+    /**
+     * Identifier, uniquely corresponding to the chat to which the message with the
+     * callback button was sent. Useful for high scores in games.
+     */
     @JsonProperty(CHAT_INSTANCE_FIELD)
     private String chatInstance;
 

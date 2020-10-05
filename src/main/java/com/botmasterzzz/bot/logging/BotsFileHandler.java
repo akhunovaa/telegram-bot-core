@@ -3,7 +3,7 @@ package com.botmasterzzz.bot.logging;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 
-public class BotsFileHandler  extends FileHandler {
+public class BotsFileHandler extends FileHandler {
 
     private static final String filePattern = "./TelegramBots%g.%u.log";
 

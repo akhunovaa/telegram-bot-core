@@ -1,6 +1,6 @@
 package com.botmasterzzz.bot.api.impl.methods;
 
-import com.botmasterzzz.bot.api.impl.objects.replykeyboard.ApiResponse;
+import com.botmasterzzz.bot.api.impl.objects.ApiResponse;
 import com.botmasterzzz.bot.exceptions.TelegramApiRequestException;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,7 +8,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.io.IOException;
 
-public class AnswerCallbackQuery extends BotApiMethod<Boolean>  {
+public class AnswerCallbackQuery extends BotApiMethod<Boolean> {
 
     public static final String PATH = "answercallbackquery";
 
@@ -19,14 +19,25 @@ public class AnswerCallbackQuery extends BotApiMethod<Boolean>  {
     private static final String CACHETIME_FIELD = "cache_time";
 
     @JsonProperty(CALLBACKQUERYID_FIELD)
-    private String callbackQueryId;
+    private String callbackQueryId; ///< Unique identifier for the query to be answered
     @JsonProperty(TEXT_FIELD)
-    private String text; //
+    private String text; ///< Optional	Text of the notification. If not specified, nothing will be shown to the user, 0-200 characters
     @JsonProperty(SHOWALERT_FIELD)
-    private Boolean showAlert;
+    private Boolean showAlert; ///< Optional. If true, an alert will be shown by the client instead of a notification at the top of the chat screen. Defaults to false.
+    /**
+     * Optional. URL that will be opened by the user's client.
+     * If you have created a Game and accepted the conditions via @Botfather,
+     * specify the URL that opens your game. Otherwise you may use links
+     * like telegram.me/your_bot?start=XXXX that open your bot with a parameter.
+     */
     @JsonProperty(URL_FIELD)
     private String url;
-
+    /**
+     * Optional	The maximum amount of time in seconds that the result of the callback query
+     * may be cached client-side.
+     *
+     * @note Telegram apps will support caching starting in version 3.14. Defaults to 0.
+     */
     @JsonProperty(CACHETIME_FIELD)
     private Integer cacheTime;
 
@@ -88,7 +99,8 @@ public class AnswerCallbackQuery extends BotApiMethod<Boolean>  {
     public Boolean deserializeResponse(String answer) throws TelegramApiRequestException {
         try {
             ApiResponse<Boolean> result = OBJECT_MAPPER.readValue(answer,
-                    new TypeReference<ApiResponse<Boolean>>(){});
+                    new TypeReference<ApiResponse<Boolean>>() {
+                    });
             if (result.getOk()) {
                 return result.getResult();
             } else {
@@ -116,5 +128,4 @@ public class AnswerCallbackQuery extends BotApiMethod<Boolean>  {
                 ", cacheTime=" + cacheTime +
                 '}';
     }
-
 }

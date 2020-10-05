@@ -1,6 +1,6 @@
 package com.botmasterzzz.bot.exceptions;
 
-public class TelegramApiException extends Exception  {
+public class TelegramApiException extends Exception {
 
     public TelegramApiException() {
         super();

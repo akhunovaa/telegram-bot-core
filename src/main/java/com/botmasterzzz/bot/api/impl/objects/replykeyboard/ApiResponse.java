@@ -9,6 +9,7 @@ import java.io.Serializable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Deprecated
 public class ApiResponse<T> implements Serializable {
     private static final String OK_FIELD = "ok";
     private static final String ERROR_CODE_FIELD = "error_code";

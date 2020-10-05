@@ -12,8 +12,8 @@ public class Context {
 
     private static final Object lock = new Object();
     private static Injector INJECTOR;
-    private static Map<Class, Class> bindings = new HashMap<>();
-    private static Map<Class, Class> singletonBindings = new HashMap<>();
+    private static final Map<Class, Class> bindings = new HashMap<>();
+    private static final Map<Class, Class> singletonBindings = new HashMap<>();
 
     public static <T> T getInstance(Class<T> type) {
         return getInjector().getInstance(type);

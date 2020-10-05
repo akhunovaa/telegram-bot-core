@@ -1,10 +1,10 @@
 package com.botmasterzzz.bot.api.impl.methods.send;
 
 import com.botmasterzzz.bot.api.impl.methods.PartialBotApiMethod;
+import com.botmasterzzz.bot.api.impl.objects.ApiResponse;
 import com.botmasterzzz.bot.api.impl.objects.Message;
 import com.botmasterzzz.bot.api.impl.objects.media.InputMedia;
 import com.botmasterzzz.bot.api.impl.objects.media.InputMediaPhoto;
-import com.botmasterzzz.bot.api.impl.objects.replykeyboard.ApiResponse;
 import com.botmasterzzz.bot.exceptions.TelegramApiRequestException;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.fasterxml.jackson.annotation.JsonProperty;

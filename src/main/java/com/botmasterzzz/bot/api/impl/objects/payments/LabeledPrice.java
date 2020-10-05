@@ -13,13 +13,14 @@ public class LabeledPrice implements InputBotApiObject, Validable {
     private String label;
     @JsonProperty(AMOUNT_FIELD)
     private Integer amount;
+
     public LabeledPrice() {
         super();
     }
 
     public LabeledPrice(String label, Integer amount) {
         super();
-        if (label != null && !label.isEmpty())this.label = label;
+        if (label != null && !label.isEmpty()) this.label = label;
         if (amount != null) this.amount = amount;
     }
 
@@ -28,7 +29,7 @@ public class LabeledPrice implements InputBotApiObject, Validable {
     }
 
     public void setLabel(String label) {
-        if (null != label)this.label = label;
+        if (null != label) this.label = label;
     }
 
     public Integer getAmount() {
@@ -36,7 +37,7 @@ public class LabeledPrice implements InputBotApiObject, Validable {
     }
 
     public void setAmount(Integer amount) {
-        if (null != amount)this.amount = amount;
+        if (null != amount) this.amount = amount;
     }
 
     @Override

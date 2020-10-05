@@ -1,14 +1,14 @@
 package com.botmasterzzz.bot.api.impl.methods;
 
+import com.botmasterzzz.bot.api.impl.objects.ApiResponse;
 import com.botmasterzzz.bot.api.impl.objects.User;
-import com.botmasterzzz.bot.api.impl.objects.replykeyboard.ApiResponse;
 import com.botmasterzzz.bot.exceptions.TelegramApiRequestException;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.io.IOException;
 
-public class GetMe  extends BotApiMethod<User> {
+public class GetMe extends BotApiMethod<User> {
     public static final String PATH = "getme";
 
     public GetMe() {

@@ -2,12 +2,14 @@ package com.botmasterzzz.bot.api.impl.objects.media;
 
 import com.botmasterzzz.bot.api.impl.objects.InputFile;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+@SuppressWarnings("unused")
+@JsonDeserialize
 public class InputMediaDocument extends InputMedia<InputMediaDocument> {
 
-    private static final String TYPE = "document";
     public static final String THUMB_FIELD = "thumb";
-
+    private static final String TYPE = "document";
     private InputFile thumb;
 
     public InputMediaDocument() {

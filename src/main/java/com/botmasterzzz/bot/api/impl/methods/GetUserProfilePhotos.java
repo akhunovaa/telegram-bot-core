@@ -1,7 +1,7 @@
 package com.botmasterzzz.bot.api.impl.methods;
 
+import com.botmasterzzz.bot.api.impl.objects.ApiResponse;
 import com.botmasterzzz.bot.api.impl.objects.UserProfilePhotos;
-import com.botmasterzzz.bot.api.impl.objects.replykeyboard.ApiResponse;
 import com.botmasterzzz.bot.exceptions.TelegramApiRequestException;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -63,7 +63,8 @@ public class GetUserProfilePhotos extends BotApiMethod<UserProfilePhotos> {
     public UserProfilePhotos deserializeResponse(String answer) throws TelegramApiRequestException {
         try {
             ApiResponse<UserProfilePhotos> result = OBJECT_MAPPER.readValue(answer,
-                    new TypeReference<ApiResponse<UserProfilePhotos>>(){});
+                    new TypeReference<ApiResponse<UserProfilePhotos>>() {
+                    });
             if (result.getOk()) {
                 return result.getResult();
             } else {

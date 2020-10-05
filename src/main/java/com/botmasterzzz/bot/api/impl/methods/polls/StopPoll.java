@@ -1,8 +1,8 @@
 package com.botmasterzzz.bot.api.impl.methods.polls;
 
 import com.botmasterzzz.bot.api.impl.methods.BotApiMethod;
+import com.botmasterzzz.bot.api.impl.objects.ApiResponse;
 import com.botmasterzzz.bot.api.impl.objects.polls.Poll;
-import com.botmasterzzz.bot.api.impl.objects.replykeyboard.ApiResponse;
 import com.botmasterzzz.bot.exceptions.TelegramApiRequestException;
 import com.botmasterzzz.bot.exceptions.TelegramApiValidationException;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -71,7 +71,8 @@ public class StopPoll extends BotApiMethod<Poll> {
     public Poll deserializeResponse(String answer) throws TelegramApiRequestException {
         try {
             ApiResponse<Poll> result = OBJECT_MAPPER.readValue(answer,
-                    new TypeReference<ApiResponse<Poll>>(){});
+                    new TypeReference<ApiResponse<Poll>>() {
+                    });
             if (result.getOk()) {
                 return result.getResult();
             } else {

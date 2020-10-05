@@ -3,7 +3,7 @@ package com.botmasterzzz.bot.exceptions;
 import com.botmasterzzz.bot.api.InputBotApiObject;
 import com.botmasterzzz.bot.api.impl.methods.PartialBotApiMethod;
 
-public class TelegramApiValidationException  extends TelegramApiException {
+public class TelegramApiValidationException extends TelegramApiException {
     private PartialBotApiMethod method;
     private InputBotApiObject object;
 
