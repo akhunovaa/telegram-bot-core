@@ -30,98 +30,78 @@ public class InlineQueryResultDeserializer extends StdDeserializer<InlineQueryRe
         switch (node.get("type").asText()) {
             case "article":
                 return objectMapper.readValue(node.toString(),
-                        new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultArticle>() {
-                        });
+                        new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultArticle>(){});
             case "audio":
                 if (node.has("audio_url")) {
                     return objectMapper.readValue(node.toString(),
-                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultAudio>() {
-                            });
+                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultAudio>(){});
                 } else {
                     return objectMapper.readValue(node.toString(),
-                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultCachedAudio>() {
-                            });
+                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultCachedAudio>(){});
                 }
             case "contact":
                 return objectMapper.readValue(node.toString(),
-                        new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultContact>() {
-                        });
+                        new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultContact>(){});
             case "document":
                 if (node.has("document_url")) {
                     return objectMapper.readValue(node.toString(),
-                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultDocument>() {
-                            });
+                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultDocument>(){});
                 } else {
                     return objectMapper.readValue(node.toString(),
-                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultCachedDocument>() {
-                            });
+                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultCachedDocument>(){});
                 }
             case "game":
                 return objectMapper.readValue(node.toString(),
-                        new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultGame>() {
-                        });
+                        new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultGame>(){});
             case "gif":
                 if (node.has("gif_url")) {
                     return objectMapper.readValue(node.toString(),
-                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultGif>() {
-                            });
+                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultGif>(){});
                 } else {
                     return objectMapper.readValue(node.toString(),
-                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultCachedGif>() {
-                            });
+                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultCachedGif>(){});
                 }
             case "location":
                 return objectMapper.readValue(node.toString(),
-                        new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultLocation>() {
-                        });
+                        new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultLocation>(){});
             case "mpeg4_gif":
                 if (node.has("mpeg4_url")) {
                     return objectMapper.readValue(node.toString(),
-                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultMpeg4Gif>() {
-                            });
+                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultMpeg4Gif>(){});
                 } else {
                     return objectMapper.readValue(node.toString(),
-                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultCachedMpeg4Gif>() {
-                            });
+                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultCachedMpeg4Gif>(){});
                 }
             case "photo":
                 if (node.has("photo_url")) {
                     return objectMapper.readValue(node.toString(),
-                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultPhoto>() {
-                            });
+                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultPhoto>(){});
                 } else {
                     return objectMapper.readValue(node.toString(),
-                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultCachedPhoto>() {
-                            });
+                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultCachedPhoto>(){});
                 }
             case "venue":
                 return objectMapper.readValue(node.toString(),
-                        new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultVenue>() {
-                        });
+                        new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultVenue>(){});
             case "video":
                 if (node.has("video_url")) {
                     return objectMapper.readValue(node.toString(),
-                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultVideo>() {
-                            });
+                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultVideo>(){});
                 } else {
                     return objectMapper.readValue(node.toString(),
-                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultCachedVideo>() {
-                            });
+                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultCachedVideo>(){});
                 }
             case "voice":
                 if (node.has("voice_url")) {
                     return objectMapper.readValue(node.toString(),
-                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultVoice>() {
-                            });
+                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultVoice>(){});
                 } else {
                     return objectMapper.readValue(node.toString(),
-                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultCachedVoice>() {
-                            });
+                            new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultCachedVoice>(){});
                 }
             case "sticker":
                 return objectMapper.readValue(node.toString(),
-                        new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultCachedSticker>() {
-                        });
+                        new com.fasterxml.jackson.core.type.TypeReference<InlineQueryResultCachedSticker>(){});
         }
 
         return null;
