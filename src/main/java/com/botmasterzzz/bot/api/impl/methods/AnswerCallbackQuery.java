@@ -24,6 +24,7 @@ public class AnswerCallbackQuery extends BotApiMethod<Boolean> {
     private String text; ///< Optional	Text of the notification. If not specified, nothing will be shown to the user, 0-200 characters
     @JsonProperty(SHOWALERT_FIELD)
     private Boolean showAlert; ///< Optional. If true, an alert will be shown by the client instead of a notification at the top of the chat screen. Defaults to false.
+    private Long requestedUserId;
     /**
      * Optional. URL that will be opened by the user's client.
      * If you have created a Game and accepted the conditions via @Botfather,
@@ -87,6 +88,15 @@ public class AnswerCallbackQuery extends BotApiMethod<Boolean> {
 
     public AnswerCallbackQuery setCacheTime(Integer cacheTime) {
         this.cacheTime = cacheTime;
+        return this;
+    }
+
+    public Long getRequestedUserId() {
+        return requestedUserId;
+    }
+
+    public AnswerCallbackQuery setRequestedUserId(Long requestedUserId) {
+        this.requestedUserId = requestedUserId;
         return this;
     }
 
