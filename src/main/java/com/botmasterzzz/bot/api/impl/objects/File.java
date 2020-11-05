@@ -27,7 +27,7 @@ public class File implements BotApiObject {
         if (botToken == null || botToken.isEmpty()) {
             throw new InvalidParameterException("Bot token can't be empty");
         }
-        return MessageFormat.format("https://api.telegram.org/file/bot{0}/{1}", botToken, filePath);
+        return MessageFormat.format("http://10.0.0.6:7116/file/bot{0}/{1}", botToken, filePath);
     }
 
     public String getFileId() {
