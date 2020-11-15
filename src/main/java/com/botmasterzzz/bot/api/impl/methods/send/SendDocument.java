@@ -34,6 +34,7 @@ public class SendDocument extends PartialBotApiMethod<Message> {
     private Integer replyToMessageId;
     private ReplyKeyboard replyMarkup;
     private String parseMode;
+    private String mediaName;
 
     private InputFile thumb;
 
@@ -143,6 +144,19 @@ public class SendDocument extends PartialBotApiMethod<Message> {
         return this;
     }
 
+    public SendDocument setThumb(String thumb) {
+        this.thumb = new InputFile(thumb);
+        return this;
+    }
+
+    public String getMediaName() {
+        return mediaName;
+    }
+
+    public void setMediaName(String mediaName) {
+        this.mediaName = mediaName;
+    }
+
     @Override
     public Message deserializeResponse(String answer) throws TelegramApiRequestException {
         try {
@@ -190,6 +204,7 @@ public class SendDocument extends PartialBotApiMethod<Message> {
                 ", replyToMessageId=" + replyToMessageId +
                 ", replyMarkup=" + replyMarkup +
                 ", parseMode='" + parseMode + '\'' +
+                ", mediaName='" + mediaName + '\'' +
                 ", thumb=" + thumb +
                 '}';
     }
