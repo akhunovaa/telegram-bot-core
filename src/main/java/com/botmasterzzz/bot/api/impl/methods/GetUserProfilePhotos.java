@@ -30,6 +30,30 @@ public class GetUserProfilePhotos extends BotApiMethod<UserProfilePhotos> {
         return PATH;
     }
 
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Integer offset) {
+        this.offset = offset;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
+
     @Override
     public UserProfilePhotos deserializeResponse(String answer) throws TelegramApiRequestException {
         try {
