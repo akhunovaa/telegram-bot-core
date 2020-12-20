@@ -43,6 +43,7 @@ public class SendVideo extends PartialBotApiMethod<Message> {
     private String parseMode;
 
     private InputFile thumb;
+    private String thumbNailPath;
 
     public SendVideo() {
         super();
@@ -184,6 +185,14 @@ public class SendVideo extends PartialBotApiMethod<Message> {
     public SendVideo setThumb(InputFile thumb) {
         this.thumb = thumb;
         return this;
+    }
+
+    public String getThumbNailPath() {
+        return thumbNailPath;
+    }
+
+    public void setThumbNailPath(String thumbNailPath) {
+        this.thumbNailPath = thumbNailPath;
     }
 
     @Override
