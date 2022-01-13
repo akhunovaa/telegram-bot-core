@@ -15,7 +15,7 @@ public class User implements BotApiObject {
     private static final String LANGUAGECODE_FIELD = "language_code";
 
     @JsonProperty(ID_FIELD)
-    private Integer id;
+    private Long id;
     @JsonProperty(FIRSTNAME_FIELD)
     private String firstName;
     @JsonProperty(ISBOT_FIELD)
@@ -31,7 +31,7 @@ public class User implements BotApiObject {
         super();
     }
 
-    public User(Integer id, String firstName, Boolean isBot, String lastName, String userName, String languageCode) {
+    public User(Long id, String firstName, Boolean isBot, String lastName, String userName, String languageCode) {
         this.id = id;
         this.firstName = firstName;
         this.isBot = isBot;
@@ -40,7 +40,7 @@ public class User implements BotApiObject {
         this.languageCode = languageCode;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
